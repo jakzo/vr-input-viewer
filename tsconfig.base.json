@@ -1,0 +1,10 @@
+{
+  "extends": ["@tsconfig/strictest/tsconfig"],
+  "exclude": ["**/out/**", "**/dist/**", "**/build/**"],
+  "compilerOptions": {
+    "moduleResolution": "Node16",
+    "paths": {
+      "@jakzo/vr-input-viewer": ["./packages/vr-input-viewer/src"]
+    }
+  }
+}

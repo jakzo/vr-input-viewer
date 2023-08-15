@@ -1,0 +1,44 @@
+# Node related
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# OS related
+.DS_Store
+*.swp
+*.swo
+*.swn
+*.log
+*.tmp
+*.tmp.*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editors and IDE related
+.idea/
+*.sublime*
+*.iml
+*.tsbuildinfo
+
+# Builds and dependencies
+dist/
+build/
+out/
+
+# Dotenv environment variables file
+.env
+.env.test
+.env.production
+
+# Others
+*.log
+*.pid
+*.seed
+*.cmd
+*.lock
+*.tlog
+*.vscode-test

@@ -1,0 +1,24 @@
+{
+  "name": "@jakzo/vr-input-viewer-web",
+  "version": "0.0.0",
+  "description": "VR input viewer web app.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "@jakzo/vr-input-viewer": "^0.0.0"
+  },
+  "devDependencies": {
+    "@manypkg/get-packages": "^2.2.0",
+    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "@tsconfig/svelte": "^5.0.0",
+    "svelte": "^4.0.5",
+    "svelte-check": "^3.4.6",
+    "vite": "^4.4.5"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@jakzo/vr-input-viewer",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Visualization of VR controller and headset inputs and positions. Useful for streams and recordings.",
+  "main": "dist/index.js",
+  "type": "module",
+  "author": "jakzo",
+  "license": "MIT",
+  "files": [
+    "./dist/",
+    "./assets/",
+    "./Serialized.fbs"
+  ],
+  "scripts": {
+    "flatbuffers": "cd ./src/Serialized && rm -rf serialized && flatc --ts ../../Serialized.fbs",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "flatbuffers": "^23.5.26",
+    "three": "^0.147.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.146.0"
+  }
+}

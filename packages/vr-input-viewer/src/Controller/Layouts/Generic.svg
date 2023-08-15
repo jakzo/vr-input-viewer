@@ -1,0 +1,101 @@
+<svg viewBox="0 0 100 100">
+  <style>
+    * {
+      stroke-width: 3;
+      stroke-linejoin: round;
+      stroke: gray;
+      fill: white;
+    }
+
+    .left {
+      left: 0;
+    }
+    .right {
+      right: 0;
+      transform: scale(-1, 1);
+    }
+    .button {
+      r: 10;
+    }
+    .button.a {
+      cx: 23;
+      cy: 82;
+    }
+    .button.b {
+      cx: 45;
+      cy: 66;
+    }
+    .thumbstick .background {
+      stroke-width: 0;
+      fill: #333;
+      r: 25;
+      cx: 30;
+      cy: 28;
+    }
+    .thumbstick .stick {
+      r: 10;
+      cx: 30;
+      cy: 28;
+    }
+    .trigger.primary {
+      transform: translate(60px, 10px) rotate(-5deg);
+    }
+    .trigger.secondary {
+      transform: translate(63px, 56px);
+    }
+    .touched {
+      fill: #edbedd;
+    }
+    .pressed {
+      fill: darkmagenta;
+    }
+  </style>
+
+  <circle class="button4 button a"></circle>
+  <circle class="button4-touched touched button a"></circle>
+  <circle class="button4-pressed pressed button a"></circle>
+
+  <circle class="button5 button b"></circle>
+  <circle class="button5-touched touched button b"></circle>
+  <circle class="button5-pressed pressed button b"></circle>
+
+  <g class="thumbstick">
+    <circle class="background"></circle>
+
+    <circle class="button2 axis2x axis3y stick" factor="13"></circle>
+    <circle
+      class="button2-touched touched axis2x axis3y stick"
+      factor="13"
+    ></circle>
+    <circle
+      class="button2-pressed pressed axis2x axis3y stick"
+      factor="13"
+    ></circle>
+  </g>
+
+  <path
+    class="button0 trigger primary"
+    d="M0,0 L0,30 A30,30,0,0,0,23,19.3 A75,75,0,0,1,5,0 Z"
+  ></path>
+  <path
+    class="button0-touched touched trigger primary"
+    d="M0,0 L0,30 A30,30,0,0,0,23,19.3 A75,75,0,0,1,5,0 Z"
+  ></path>
+  <path
+    class="button0-pressed pressed trigger primary"
+    d="M0,0 L0,30 A30,30,0,0,0,23,19.3 A75,75,0,0,1,5,0 Z"
+  ></path>
+
+  <path
+    class="button1 trigger secondary"
+    d="M0,0 L10,0 A15,15,0,0,1,10,20 L0,20 Z"
+  ></path>
+  <path
+    class="button1-touched touched trigger secondary"
+    d="M0,0 L10,0 A15,15,0,0,1,10,20 L0,20 Z"
+  ></path>
+  <path
+    class="button1-pressed pressed trigger secondary"
+    d="M0,0 L10,0 A15,15,0,0,1,10,20 L0,20 Z"
+  ></path>
+</svg>

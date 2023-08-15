@@ -1,0 +1,84 @@
+﻿// After modifying this file run:
+// npm -w @jakzo/vr-input-viewer run flatbuffers
+
+namespace Serialized;
+
+enum Handedness: uint8 {
+  LEFT,
+  RIGHT,
+}
+
+table Message {
+  headset_connect: HeadsetConnect;
+  headset_disconnect: HeadsetDisconnect;
+  controller_connect: ControllerConnect;
+  controller_disconnect: ControllerDisconnect;
+  input_update: InputUpdate;
+}
+
+table HeadsetConnect {
+  profiles: [string];
+}
+
+table HeadsetDisconnect {}
+
+table ControllerConnect {
+  handedness: Handedness;
+  profiles: [string];
+}
+
+table ControllerDisconnect {
+  handedness: Handedness;
+}
+
+table InputUpdate {
+  /// Milliseconds since epoch
+  timestamp: int64;
+  headset: HeadsetInput;
+  left_controller: ControllerInput;
+  right_controller: ControllerInput;
+}
+
+table HeadsetInput {
+  transform: Transform;
+}
+
+table ControllerInput {
+  transform: Transform;
+  /// Bit 0 = pressed
+  /// Bit 1 = touched
+  /// Bits 2-15 = value
+  buttons: [uint16];
+  axes: [float32];
+}
+
+struct Vector3 {
+  x: float32;
+  y: float32;
+  z: float32;
+}
+
+struct Vector4 {
+  x: float32;
+  y: float32;
+  z: float32;
+  w: float32;
+}
+
+struct Transform {
+  position: Vector3;
+  rotation_quaternion: Vector4;
+}
+
+enum Button: uint16 (bit_flags) {
+  A,
+  B,
+  MENU,
+  SECONDARY_MENU,
+  THUMB_STICK,
+  PRIMARY_INTERACTION,
+  SECONDARY_INTERACTION,
+  GRABBED_STATE,
+}
+
+root_type Message;

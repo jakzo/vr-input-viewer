@@ -1,0 +1,25 @@
+{
+  "name": "@jakzo/vr-input-viewer-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "private": true,
+  "author": "jakzo",
+  "license": "MIT",
+  "workspaces": [
+    "./packages/*"
+  ],
+  "scripts": {
+    "format:check": "prettier --check",
+    "format:fix": "prettier --write",
+    "test": "npm run format:check"
+  },
+  "devDependencies": {
+    "@monorepo-utils/workspaces-to-typescript-project-references": "^2.10.2",
+    "@tsconfig/node18": "^18.2.0",
+    "@tsconfig/strictest": "^2.0.1",
+    "prettier": "^3.0.1",
+    "tslib": "^2.6.1",
+    "typescript": "^5.1.6"
+  }
+}

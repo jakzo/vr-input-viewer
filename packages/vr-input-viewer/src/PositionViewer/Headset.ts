@@ -1,17 +1,16 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { withBaseUrl } from "../utils/utils.js";
 
-const REMOTE_URL =
-  "https://jakzo.github.io/SlzSpeedrunTools/input-viewer/quest2_hmd.glb";
+const CDN_BASE_URL =
+  "https://cdn.jsdelivr.net/npm/@jakzo/vr-input-viewer/assets/";
 
-export const createHeadset = () => {
+export const createHeadset = (headsetName: string, assetsBaseUrl?: string) => {
   const group = new THREE.Group();
   const loader = new GLTFLoader();
 
-  const loadWithUrl = (url: string, onError: (evt: ErrorEvent) => void) => {
+  const loadWithUrl = (baseUrl: string, onError: (evt: ErrorEvent) => void) => {
     loader.load(
-      url,
+      new URL(`headsets/${headsetName}.glb`, baseUrl).toString(),
       (gltf) => {
         // TODO: Bake these into the model
         gltf.scene.rotateX(Math.PI * -0.3);
@@ -26,11 +25,13 @@ export const createHeadset = () => {
     );
   };
 
-  loadWithUrl(withBaseUrl("./quest2_hmd.glb"), () => {
-    loadWithUrl(REMOTE_URL, (err) => {
+  const loadFromCdn = () =>
+    loadWithUrl(CDN_BASE_URL, (err) => {
       console.error("Failed to load HMD model:", err);
     });
-  });
+
+  if (assetsBaseUrl) loadWithUrl(assetsBaseUrl, loadFromCdn);
+  else loadFromCdn();
 
   return group;
 };

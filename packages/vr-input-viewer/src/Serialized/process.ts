@@ -8,8 +8,6 @@ import {
 } from "./Serialized.js";
 import { Handedness, Transform } from "../utils/utils.js";
 
-export * from "./Serialized.js";
-
 const MAX_BUTTON_VALUE = (1 << 14) - 1;
 
 export const processSerializedMessage = (

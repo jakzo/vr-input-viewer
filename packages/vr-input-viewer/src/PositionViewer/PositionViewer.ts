@@ -18,16 +18,14 @@ import { HeightTrackers } from "./HeightTrackers.js";
 export interface PositionViewerOpts {
   container: HTMLElement;
   transforms: Transforms;
-  showStats?: boolean;
-  loadAsset?: (
-    type: "hmd" | "controller",
-    profile: string,
-  ) => Promise<ArrayBuffer | undefined>;
-  assetBaseUrl?: string;
+  showStats?: boolean | undefined;
+  assetsBaseUrl?: string | undefined;
+  webxrInputProfilesBaseUrl?: string | undefined;
+  headsetName?: string | undefined;
 }
 
 export class PositionViewer {
-  stats: Stats.default | undefined;
+  stats: Stats | undefined;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   orbit: OrbitControls;
@@ -44,6 +42,7 @@ export class PositionViewer {
   headset: THREE.Object3D;
   transforms: [THREE.Object3D, Transforms[keyof Transforms]][];
   loader = new GLTFLoader();
+  headsetName: string;
 
   constructor(public opts: PositionViewerOpts) {
     this.scene = new THREE.Scene();
@@ -70,8 +69,15 @@ export class PositionViewer {
       right: this.createController(),
     };
 
-    this.headset = createHeadset();
+    this.headsetName = opts.headsetName ?? "oculus-quest2";
+    this.headset = createHeadset(this.headsetName, opts.assetsBaseUrl);
     this.scene.add(this.headset);
+
+    if (opts.webxrInputProfilesBaseUrl)
+      this.controllerModelFactory.path = opts.webxrInputProfilesBaseUrl.replace(
+        /\/$/,
+        "",
+      );
 
     this.transforms = [
       [this.headset, opts.transforms.hmd],
@@ -79,7 +85,7 @@ export class PositionViewer {
       [this.controllers.right.container, opts.transforms.right],
     ];
 
-    this.stats = opts.showStats ? Stats.default() : undefined;
+    this.stats = opts.showStats ? Stats() : undefined;
     if (this.stats) opts.container.appendChild(this.stats.dom);
 
     this.scene.add(createEnvironment());

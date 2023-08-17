@@ -12,7 +12,7 @@ Visualization of VR controller and headset inputs and positions. Useful for stre
 
 - Clone this repository then follow [development setup instructions](#🛠️-development-setup) below
 - Follow [instructions to add a new controller layout](./packages/vr-input-viewer/src/Controller/Layouts/README.md)
-- Follow [instructions to add a new headset model](#TODO)
+- Follow [instructions to add a new headset model](./packages/vr-input-viewer/assets/headsets/README.md)
 - Follow [instructions to add a new controller model](#TODO)
 - Open a pull request with your changes so that everyone can use your new layout/headset 🙂
 

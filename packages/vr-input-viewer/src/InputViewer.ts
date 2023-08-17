@@ -8,20 +8,36 @@ import {
 } from "./utils/utils.js";
 
 const DEFAULT_HEADSET_PROFILE = "oculus-quest2";
+// https://immersive-web.github.io/webxr-input-profiles/packages/viewer/dist/index.html
 const DEFAULT_CONTROLLER_PROFILE = "oculus-touch-v3";
 
 export interface InputViewerOpts {
+  /**
+   * Element to render the input viewer inside. Fills to the width and height
+   * of this container (using CSS `width: 100%; height: 100%;`).
+   */
   container: HTMLElement;
-  hideHud?: boolean;
-  hidePositions?: boolean;
-  showStats?: boolean;
-  loadAsset?: (
-    type: "hmd" | "controller",
-    profile: string,
-  ) => Promise<ArrayBuffer | undefined>;
-  /** URL where the `assets` directory is mounted. */
-  assetBaseUrl?: string;
-  controllerLayout?: string;
+  /** Hide controller inputs. */
+  hideHud?: boolean | undefined;
+  /** Hide 3D position view. */
+  hidePositions?: boolean | undefined;
+  /** Show rendering statistics for the position viewer like FPS. */
+  showStats?: boolean | undefined;
+  /**
+   * URL where the `assets` directory within the vr-input-viewer package is
+   * mounted. If not set, assets will be loaded from a CDN.
+   */
+  assetsBaseUrl?: string | undefined;
+  /**
+   * URL where the [@webxr-input-profiles/assets](https://cdn.jsdelivr.net/npm/@webxr-input-profiles/assets@1.0/dist/profiles/)
+   * package's `dist/profiles` directory is mounted. If not set, controller
+   * models will be loaded from a CDN.
+   */
+  webxrInputProfilesBaseUrl?: string | undefined;
+  /** Layout to use for showing inputs. */
+  controllerLayout?: string | undefined;
+  /** Force it to show a specific headset model. */
+  overrideHeadsetName?: string | undefined;
 }
 
 export class InputViewer {
@@ -46,6 +62,8 @@ export class InputViewer {
     if (!opts.hidePositions)
       this.positionViewer = new PositionViewer({
         ...opts,
+        assetsBaseUrl: opts.assetsBaseUrl?.replace(/([^/]|^)$/, "$1/"),
+        webxrInputProfilesBaseUrl: opts.webxrInputProfilesBaseUrl,
         container: this.container,
         transforms: this.transforms,
       });

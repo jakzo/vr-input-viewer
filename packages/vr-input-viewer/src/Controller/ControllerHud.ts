@@ -39,6 +39,7 @@ export class ControllerHud {
     this.container.style.cssText = Object.entries({
       position: "absolute",
       bottom: "0",
+      width: "40%",
       "max-width": "40%",
       "max-height": "50%",
       "aspect-ratio": "1/1",

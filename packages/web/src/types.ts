@@ -1,3 +1,14 @@
 import type { InputViewerOpts } from "@jakzo/vr-input-viewer";
 
-export type Settings = Pick<InputViewerOpts, "controllerLayout">;
+export interface Settings
+  extends Pick<
+    InputViewerOpts,
+    "controllerLayout" | "hideHud" | "hidePositions" | "showStats"
+  > {
+  host: string;
+}
+
+export type Logger = Record<
+  "info" | "warn" | "error",
+  (...data: unknown[]) => void
+>;

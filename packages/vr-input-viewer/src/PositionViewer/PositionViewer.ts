@@ -50,7 +50,7 @@ export class PositionViewer {
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     this.camera.position.set(0, 1.8, -1.4);
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     const setSize = throttle(100, () => {
       const width = opts.container.clientWidth;

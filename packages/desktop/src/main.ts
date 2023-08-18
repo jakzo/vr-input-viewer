@@ -1,7 +1,10 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
-// modify your existing createWindow() function
+// if (require("electron-squirrel-startup")) {
+//   app.quit();
+// }
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -22,10 +25,6 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-app.whenReady().then(() => {
-  createWindow();
-
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });

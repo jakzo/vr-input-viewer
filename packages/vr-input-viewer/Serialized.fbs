@@ -9,12 +9,20 @@ enum Handedness: uint8 {
 }
 
 table Message {
+  /// Start sending input updates
+  start: Start;
+  /// Stop sending input updates
+  stop: Stop;
   headset_connect: HeadsetConnect;
   headset_disconnect: HeadsetDisconnect;
   controller_connect: ControllerConnect;
   controller_disconnect: ControllerDisconnect;
   input_update: InputUpdate;
 }
+
+table Start {}
+
+table Stop {}
 
 table HeadsetConnect {
   profiles: [string];

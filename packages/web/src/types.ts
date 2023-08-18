@@ -5,7 +5,8 @@ export interface Settings
     InputViewerOpts,
     "controllerLayout" | "hideHud" | "hidePositions" | "showStats"
   > {
-  host: string;
+  inputSource: string;
+  inputSourceOpts: Record<string, Record<string, unknown>>;
 }
 
 export type Logger = Record<

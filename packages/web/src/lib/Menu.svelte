@@ -4,6 +4,17 @@
   import { layouts } from "@jakzo/vr-input-viewer";
 
   import type { Settings } from "../types";
+  import type {
+    VrInputSource,
+    VrInputSourceConfigOpt,
+  } from "../input-sources/VrInputSource";
+
+  export let inputSources: VrInputSource[];
+  export let inputSourceAvailability: boolean[];
+  const getOptEntries = (inputSource: VrInputSource) =>
+    Object.entries(
+      inputSource.type.config.opts as Record<string, VrInputSourceConfigOpt>
+    );
 
   export let settings: Settings;
   const changeSetting = <K extends keyof Settings>(
@@ -11,6 +22,22 @@
     value: Settings[K]
   ) => {
     settings = { ...settings, [setting]: value };
+  };
+  const changeInputSourceOpt = (
+    inputSourceName: string,
+    key: string,
+    value: unknown
+  ) => {
+    settings = {
+      ...settings,
+      inputSourceOpts: {
+        ...settings.inputSourceOpts,
+        [inputSourceName]: {
+          ...settings.inputSourceOpts[inputSourceName],
+          [key]: value,
+        },
+      },
+    };
   };
 
   let isOpen = true;
@@ -69,27 +96,58 @@
     aria-labelledby="title"
     aria-modal="true"
     transition:fade
-    on:submit|preventDefault={closeMenu}
   >
     <div class="form-container">
-      <form>
-        <h2 class="title">Menu</h2>
+      <form class="form" on:submit|preventDefault>
+        <h3 class="title">Input source</h3>
 
-        <label for="host">Host (IP address):</label>
-        <div class="text-input">
-          <input
-            id="host"
-            type="text"
-            value={settings.host}
-            on:change={(evt) => changeSetting("host", evt.currentTarget.value)}
-            placeholder="127.0.0.1"
-            aria-describedby="host-tip"
-          />
-          <span class="tip" id="host-tip">
-            Enter the IP address or hostname of the VR device (leave empty for
-            this device).
-          </span>
-        </div>
+        {#each inputSources as inputSource, i (inputSource.type.config.name)}
+          {@const name = inputSource.type.config.name}
+          <div>
+            <input
+              id="input-source-{name}"
+              type="radio"
+              name="input-source"
+              value={name}
+              checked={settings.inputSource === name}
+              on:change={(evt) => {
+                if (evt.currentTarget.checked)
+                  changeSetting("inputSource", name);
+              }}
+            />
+            <label for="input-source-{name}">
+              <span class="input-source-availability">
+                {inputSourceAvailability[i]
+                  ? "🟩"
+                  : inputSourceAvailability[i] === false
+                  ? "🟥"
+                  : ""}
+              </span>
+              {name}
+            </label>
+          </div>
+          <div>
+            {#each getOptEntries(inputSource) as [key, opts] (key)}
+              {#if opts.type === "string"}
+                <div class="text-input">
+                  <input
+                    type="text"
+                    value={settings.inputSourceOpts[name][key]}
+                    on:change={(evt) =>
+                      changeInputSourceOpt(name, key, evt.currentTarget.value)}
+                    placeholder={opts.placeholder}
+                    aria-describedby="input-source-{name}-{key}-tip"
+                  />
+                  <span class="tip" id="input-source-{name}-{key}-tip">
+                    {opts.tip}
+                  </span>
+                </div>
+              {/if}
+            {/each}
+          </div>
+        {/each}
+
+        <h3 class="title">Settings</h3>
 
         <label for="controller-layout">Controller layout:</label>
         <select
@@ -204,7 +262,7 @@
     overflow: auto;
   }
 
-  .dialog form {
+  .dialog .form {
     display: grid;
     gap: 1rem;
     grid-template-columns: 2fr 3fr;
@@ -226,5 +284,12 @@
     grid-column: 1 / 3;
     font-size: 0.8rem;
     color: #dddddd;
+  }
+
+  .input-source-availability {
+    width: 1.5rem;
+    display: inline-block;
+    text-align: center;
+    line-height: 1px;
   }
 </style>

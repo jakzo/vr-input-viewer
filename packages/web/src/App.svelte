@@ -1,37 +1,82 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import {
-    InputViewer,
-    processSerializedMessage,
-  } from "@jakzo/vr-input-viewer";
+  import { InputViewer } from "@jakzo/vr-input-viewer";
 
   import Menu from "./lib/Menu.svelte";
   import type { Logger, Settings } from "./types";
   import Notifications from "./lib/Notifications.svelte";
+  import ResizeText from "./lib/ResizeText.svelte";
+  import { WebsocketInputSource } from "./input-sources/WebsocketInputSource";
+  import type {
+    VrInputSource,
+    VrInputSourceConfigOpt,
+  } from "./input-sources/VrInputSource";
+  import { WebxrInputSource } from "./input-sources/WebxrInputSource";
+
+  let log: Logger;
 
   const LS_SETTINGS_KEY = "vr-input-viewer-settings";
   const DEFAULT_SETTINGS: Settings = {
     controllerLayout: "Generic",
-    host: "",
+    inputSource: "Websocket",
+    inputSourceOpts: {},
     hideHud: false,
     hidePositions: false,
     showStats: false,
   };
+  const loadSavedSettings = () => {
+    try {
+      const savedSettingsStr = localStorage.getItem(LS_SETTINGS_KEY);
+      if (!savedSettingsStr) throw new Error("No saved settings");
+      const loadedSettings = JSON.parse(savedSettingsStr);
+      for (const [key, value] of Object.entries(DEFAULT_SETTINGS)) {
+        if (!(key in loadedSettings)) loadedSettings[key] = value;
+      }
+      return loadedSettings;
+    } catch {
+      return DEFAULT_SETTINGS;
+    }
+  };
+  let settings: Settings = loadSavedSettings();
+  $: localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings));
 
-  const WEBSOCKET_RETRY_DELAY = 5_000;
+  let inputSources: VrInputSource[] = [
+    new WebsocketInputSource(),
+    new WebxrInputSource(),
+  ];
+  let inputSourceAvailability: boolean[];
+  $: for (const inputSource of inputSources) inputSource.log = log;
+  $: for (const inputSource of inputSources) {
+    const { config } = inputSource.type;
+    if (!settings.inputSourceOpts[config.name])
+      settings.inputSourceOpts[config.name] = {};
+    const values = settings.inputSourceOpts[config.name];
+    const optEntries = Object.entries(
+      config.opts as Record<string, VrInputSourceConfigOpt>
+    );
+    for (const [key, opt] of optEntries) {
+      if (!(key in values)) values[key] = opt.defaultValue;
+    }
+    inputSource.setOpts(settings.inputSourceOpts[config.name]);
+  }
+  $: {
+    const setInputSourceAvailability = () => {
+      inputSourceAvailability = inputSources.map((s) => s.isAvailable);
+    };
+    setInputSourceAvailability();
+    for (const inputSource of inputSources) {
+      inputSource.onAvailable = setInputSourceAvailability;
+    }
+  }
+  onDestroy(() => {
+    for (const inputSource of inputSources) {
+      if (inputSource.isStarted) inputSource.stop();
+      inputSource.destroy();
+    }
+  });
 
-  const loadedSettings = localStorage.getItem(LS_SETTINGS_KEY);
-
-  let log: Logger;
-  let settings: Settings = loadedSettings
-    ? JSON.parse(loadedSettings)
-    : DEFAULT_SETTINGS;
   let inputViewerContainer: HTMLDivElement;
   let inputViewer: InputViewer | undefined = undefined;
-  let ws: WebSocket | undefined;
-  let wsHost: string;
-  let isWsOpen = false;
-  let wsRetryTimeout: number;
 
   const initInputViewer = () => {
     inputViewer?.remove();
@@ -49,79 +94,33 @@
     });
     inputViewer.connectController("left");
     inputViewer.connectController("right");
-  };
 
-  const connectWebsocket = (host: string, isInitialConnection = false) => {
-    closeWebsocket();
-
-    ws = new WebSocket(`ws://${host}:6161/`);
-    ws.binaryType = "arraybuffer";
-    ws.addEventListener("open", () => {
-      log.info("Connected to game");
-      isWsOpen = true;
-    });
-    ws.addEventListener("error", () => {
-      if (isWsOpen) log.warn("Connection error");
-      else if (isInitialConnection) {
-        log.warn(
-          `Failed to connect to ${
-            host === "127.0.0.1" ? "this device" : host
-          }, will retry in background...`
-        );
-      }
-    });
-    ws.addEventListener("close", () => {
-      if (isWsOpen) log.info("Connection closed");
-      ws = undefined;
-      wsRetryTimeout = window.setTimeout(
-        connectWebsocket,
-        WEBSOCKET_RETRY_DELAY,
-        host
-      );
-    });
-    ws.addEventListener(
-      "message",
-      (evt: MessageEvent<ArrayBuffer | string>) => {
-        if (typeof evt.data === "string") {
-        } else if (inputViewer) {
-          processSerializedMessage(inputViewer, evt.data);
-        }
-      }
-    );
-  };
-
-  const closeWebsocket = () => {
-    clearTimeout(wsRetryTimeout);
-    ws?.close();
-    ws = undefined;
+    for (const inputSource of inputSources) {
+      inputSource.inputViewer = inputViewer;
+    }
   };
 
   $: if (inputViewerContainer && settings) initInputViewer();
-  $: localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings));
-  $: {
-    const host = settings.host || "127.0.0.1";
-    if (host !== wsHost) {
-      wsHost = host;
-      connectWebsocket(host, true);
-    }
-  }
 
-  onDestroy(() => {
-    inputViewer?.remove();
-    closeWebsocket();
-  });
+  onDestroy(() => inputViewer?.remove());
 
   let onInteraction: () => void;
 </script>
 
-<main on:mousemove={onInteraction}>
+<article class="container" on:mousemove={onInteraction}>
   <div class="input-viewer" bind:this={inputViewerContainer} />
-  <Menu bind:settings bind:onInteraction />
+  <Menu
+    {inputSources}
+    {inputSourceAvailability}
+    bind:settings
+    bind:onInteraction
+  />
   <Notifications bind:log />
-</main>
+  <ResizeText />
+</article>
 
 <style>
-  main,
+  .container,
   .input-viewer {
     width: 100%;
     height: 100%;

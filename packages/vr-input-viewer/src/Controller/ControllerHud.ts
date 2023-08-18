@@ -1,5 +1,28 @@
+import DOMPurify from "dompurify";
 import { VirtualXRInputSource } from "../utils/utils.js";
 import { layouts } from "./layouts.js";
+
+export class IsolatedSvg extends HTMLElement {
+  static get observedAttributes() {
+    return ["svg-src"];
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.setSvg(this.getAttribute("svg-src") ?? "");
+  }
+
+  attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+    if (name === "svg-src") this.setSvg(newValue);
+  }
+
+  private setSvg(svgSrc: string) {
+    this.shadowRoot!.innerHTML = DOMPurify.sanitize(svgSrc);
+  }
+}
+
+customElements.define("isolated-svg", IsolatedSvg);
 
 export interface ControllerHudOpts {
   xrInputSource: VirtualXRInputSource;
@@ -9,7 +32,7 @@ export interface ControllerHudOpts {
 
 export class ControllerHud {
   layout: string;
-  container = document.createElement("div");
+  container = document.createElement("isolated-svg");
   buttonElements: {
     base: HTMLElement[];
     touched: HTMLElement[];
@@ -52,9 +75,9 @@ export class ControllerHud {
       .map((entry) => entry.join(":"))
       .join(";");
 
-    // TODO: Sanitize first (eg. remove script tags)
-    this.container.innerHTML = svgSrc;
-    const svg = this.container.querySelector("svg");
+    const svgSrcSanitized = DOMPurify.sanitize(svgSrc);
+    this.container.setAttribute("svg-src", svgSrcSanitized);
+    const svg = this.container.shadowRoot!.querySelector("svg");
     if (!svg)
       throw new Error("Controller layout does not contain an SVG element");
     svg.style.width = svg.style.height = "100%";
@@ -63,15 +86,17 @@ export class ControllerHud {
     this.buttonElements = opts.xrInputSource.gamepad.buttons.map(
       (_button, idx) => ({
         base: [
-          ...this.container.querySelectorAll<HTMLElement>(`.button${idx}`),
+          ...this.container.shadowRoot!.querySelectorAll<HTMLElement>(
+            `.button${idx}`,
+          ),
         ],
         touched: [
-          ...this.container.querySelectorAll<HTMLElement>(
+          ...this.container.shadowRoot!.querySelectorAll<HTMLElement>(
             `.button${idx}-touched`,
           ),
         ],
         pressed: [
-          ...this.container.querySelectorAll<HTMLElement>(
+          ...this.container.shadowRoot!.querySelectorAll<HTMLElement>(
             `.button${idx}-pressed`,
           ),
         ],

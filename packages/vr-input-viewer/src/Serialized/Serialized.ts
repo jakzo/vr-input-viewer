@@ -10,6 +10,8 @@ export { HeadsetDisconnect } from './serialized/headset-disconnect.js';
 export { HeadsetInput } from './serialized/headset-input.js';
 export { InputUpdate } from './serialized/input-update.js';
 export { Message } from './serialized/message.js';
+export { Start } from './serialized/start.js';
+export { Stop } from './serialized/stop.js';
 export { Transform } from './serialized/transform.js';
 export { Vector3 } from './serialized/vector3.js';
 export { Vector4 } from './serialized/vector4.js';

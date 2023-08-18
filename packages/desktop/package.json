@@ -2,11 +2,11 @@
   "name": "@jakzo/vr-input-viewer-desktop",
   "version": "0.0.0",
   "description": "VR input viewer desktop app.",
-  "type": "module",
+  "type": "commonjs",
   "private": true,
   "author": "jakzo",
   "license": "MIT",
-  "main": "main.js",
+  "main": "dist/index.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -22,6 +22,7 @@
     "@electron-forge/maker-squirrel": "^6.3.0",
     "@electron-forge/maker-zip": "^6.3.0",
     "@electron-forge/plugin-auto-unpack-natives": "^6.3.0",
+    "@electron-forge/plugin-vite": "^6.3.0",
     "electron": "25.5.0",
     "prettier": "^3.0.1"
   }

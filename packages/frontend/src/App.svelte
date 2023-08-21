@@ -2,16 +2,14 @@
   import { onDestroy } from "svelte";
   import { InputViewer } from "@jakzo/vr-input-viewer";
 
-  import Menu from "./lib/Menu.svelte";
-  import type { Logger, Settings } from "./types";
-  import Notifications from "./lib/Notifications.svelte";
-  import ResizeText from "./lib/ResizeText.svelte";
-  import { WebsocketInputSource } from "./input-sources/WebsocketInputSource";
+  import Menu from "./components/Menu.svelte";
+  import type { Logger, Settings } from "./types.js";
+  import Notifications from "./components/Notifications.svelte";
+  import ResizeText from "./components/ResizeText.svelte";
   import type {
     VrInputSource,
     VrInputSourceConfigOpt,
-  } from "./input-sources/VrInputSource";
-  import { WebxrInputSource } from "./input-sources/WebxrInputSource";
+  } from "./input-sources/VrInputSource.js";
 
   let log: Logger;
 
@@ -40,17 +38,26 @@
   let settings: Settings = loadSavedSettings();
   $: localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings));
 
-  let inputSources: VrInputSource[] = [
-    new WebsocketInputSource(),
-    new WebxrInputSource(),
-  ];
-  let inputSourceAvailability: boolean[];
+  export let inputSources: VrInputSource[];
+  let inputSourceAvailability: (boolean | undefined)[];
+  const setInputSourceAvailability = () => {
+    inputSourceAvailability = inputSources.map((s) => s.isAvailable);
+  };
+  for (const inputSource of inputSources) {
+    inputSource.onAvailable = setInputSourceAvailability;
+  }
+  $: {
+    setInputSourceAvailability();
+    for (const inputSource of inputSources) {
+      inputSource.onAvailable = setInputSourceAvailability;
+    }
+  }
   $: for (const inputSource of inputSources) inputSource.log = log;
   $: for (const inputSource of inputSources) {
     const { config } = inputSource.type;
     if (!settings.inputSourceOpts[config.name])
       settings.inputSourceOpts[config.name] = {};
-    const values = settings.inputSourceOpts[config.name];
+    const values = settings.inputSourceOpts[config.name]!;
     const optEntries = Object.entries(
       config.opts as Record<string, VrInputSourceConfigOpt>
     );
@@ -59,21 +66,18 @@
     }
     inputSource.setOpts(settings.inputSourceOpts[config.name]);
   }
-  $: {
-    const setInputSourceAvailability = () => {
-      inputSourceAvailability = inputSources.map((s) => s.isAvailable);
-    };
-    setInputSourceAvailability();
-    for (const inputSource of inputSources) {
-      inputSource.onAvailable = setInputSourceAvailability;
-    }
-  }
   onDestroy(() => {
     for (const inputSource of inputSources) {
       if (inputSource.isStarted) inputSource.stop();
       inputSource.destroy();
     }
   });
+  $: {
+    const inputSource = inputSources.find(
+      (s) => s.type.config.name === settings.inputSource
+    );
+    if (inputSource && !inputSource.isStarted) inputSource.start();
+  }
 
   let inputViewerContainer: HTMLDivElement;
   let inputViewer: InputViewer | undefined = undefined;
@@ -92,8 +96,8 @@
         window.location.href
       ).toString(),
     });
-    inputViewer.connectController("left");
-    inputViewer.connectController("right");
+    // inputViewer.connectController("left");
+    // inputViewer.connectController("right");
 
     for (const inputSource of inputSources) {
       inputSource.inputViewer = inputViewer;

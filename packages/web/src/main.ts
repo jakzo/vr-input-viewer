@@ -1,8 +1,8 @@
-import "./app.css";
-import App from "./App.svelte";
+import "@jakzo/vr-input-viewer-frontend/src/app.css";
+import WebApp from "./WebApp.svelte";
 
-const app = new App({
-  target: document.getElementById("app"),
+const app = new WebApp({
+  target: document.getElementById("app")!,
 });
 
 export default app;

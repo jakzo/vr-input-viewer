@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import type { Logger } from "../types";
+  import type { Logger } from "../types.js";
 
   interface Notification {
     idx: number;

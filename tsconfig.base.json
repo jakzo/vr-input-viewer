@@ -1,11 +1,22 @@
 {
   "extends": ["@tsconfig/strictest/tsconfig"],
-  "exclude": ["**/out/**", "**/dist/**", "**/build/**"],
+  "include": ["**/*", "**/*.svelte"],
+  "exclude": [
+    "**/out/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.*/**",
+    "**/node_modules/**"
+  ],
   "compilerOptions": {
     "moduleResolution": "Bundler",
     "module": "ESNext",
+    "composite": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "rootDir": ".",
     "paths": {
-      "@jakzo/vr-input-viewer": ["./packages/vr-input-viewer/src"]
+      "@jakzo/vr-input-viewer": ["./packages/vr-input-viewer/src/index.ts"]
     }
   }
 }

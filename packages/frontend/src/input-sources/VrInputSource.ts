@@ -1,14 +1,10 @@
 import type { InputViewer } from "@jakzo/vr-input-viewer";
-import type { Logger } from "../types";
+import type { Logger } from "../types.js";
 
-export interface VrInputSourceType<T extends VrInputSource<{}>> {
-  config: VrInputSourceConfig<T["opts"]>;
+export interface VrInputSourceType<Opts> {
+  config: VrInputSourceConfig<Opts>;
 
-  new (
-    inputViewer: InputViewer | undefined,
-    log: Logger,
-    setAvailable: (value: boolean) => void,
-  ): T;
+  new (log: Logger, opts: Opts): VrInputSource<Opts>;
 }
 
 export interface VrInputSourceConfig<Opts = unknown> {
@@ -29,14 +25,17 @@ export interface VrInputSourceConfigOpt<T = unknown> {
  * cause heavy resource usage. Save that for the `start()` call.
  */
 export abstract class VrInputSource<Opts = unknown> {
-  abstract type: VrInputSourceType<VrInputSource<Opts>>;
+  abstract type: VrInputSourceType<Opts>;
 
-  opts: Opts;
   isAvailable: boolean | undefined = undefined;
   isStarted = false;
   inputViewer: InputViewer | undefined = undefined;
   onAvailable: ((value: boolean) => void) | undefined = undefined;
-  log: Logger;
+
+  constructor(
+    public log: Logger,
+    public opts: Opts,
+  ) {}
 
   /**
    * Call whenever availability of the input source changes. If availability
@@ -44,7 +43,7 @@ export abstract class VrInputSource<Opts = unknown> {
    */
   protected setAvailable(value: boolean) {
     this.isAvailable = value;
-    this.onAvailable(value);
+    this.onAvailable?.(value);
   }
 
   /**

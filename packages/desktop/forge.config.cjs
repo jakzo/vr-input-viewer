@@ -34,17 +34,17 @@ const config = {
         build: [
           {
             entry: "src/main.ts",
-            config: "vite.main.config.mjs",
+            config: "vite.main.config.mts",
           },
           {
             entry: "src/preload.ts",
-            config: "vite.preload.config.mjs",
+            config: "vite.preload.config.mts",
           },
         ],
         renderer: [
           {
             name: "main_window",
-            config: "vite.renderer.config.mjs",
+            config: "vite.renderer.config.mts",
           },
         ],
       },

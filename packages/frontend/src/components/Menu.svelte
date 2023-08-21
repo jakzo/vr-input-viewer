@@ -3,14 +3,14 @@
   import { fade } from "svelte/transition";
   import { layouts } from "@jakzo/vr-input-viewer";
 
-  import type { Settings } from "../types";
+  import type { Settings } from "../types.js";
   import type {
     VrInputSource,
     VrInputSourceConfigOpt,
-  } from "../input-sources/VrInputSource";
+  } from "../input-sources/VrInputSource.js";
 
   export let inputSources: VrInputSource[];
-  export let inputSourceAvailability: boolean[];
+  export let inputSourceAvailability: (boolean | undefined)[];
   const getOptEntries = (inputSource: VrInputSource) =>
     Object.entries(
       inputSource.type.config.opts as Record<string, VrInputSourceConfigOpt>
@@ -132,7 +132,7 @@
                 <div class="text-input">
                   <input
                     type="text"
-                    value={settings.inputSourceOpts[name][key]}
+                    value={settings.inputSourceOpts[name]?.[key]}
                     on:change={(evt) =>
                       changeInputSourceOpt(name, key, evt.currentTarget.value)}
                     placeholder={opts.placeholder}

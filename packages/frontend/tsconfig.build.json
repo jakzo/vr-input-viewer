@@ -1,0 +1,16 @@
+{
+  "extends": ["../../tsconfig.base.json", "@tsconfig/svelte/tsconfig.json"],
+  "include": ["src/**/*", "src/**/*.svelte"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true,
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "rootDir": "./src"
+  },
+  "references": [{ "path": "../vr-input-viewer/tsconfig.json" }]
+}

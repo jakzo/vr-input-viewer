@@ -1,0 +1,16 @@
+{
+  "name": "@jakzo/vr-input-viewer-config",
+  "version": "0.0.0",
+  "description": "Config and dev utilities.",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@manypkg/get-packages": "^2.2.0",
+    "@sveltejs/vite-plugin-svelte": "^2.4.5",
+    "resolve": "^1.22.4",
+    "vite": "^4.4.9",
+    "vite-plugin-pwa": "^0.16.4",
+    "vite-plugin-static-copy": "^0.17.0"
+  }
+}

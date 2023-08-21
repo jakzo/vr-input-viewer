@@ -1,6 +1,6 @@
 import { Builder } from "flatbuffers";
 import { Serialized, processSerializedMessage } from "@jakzo/vr-input-viewer";
-import { VrInputSource, type VrInputSourceConfig } from "./VrInputSource";
+import { VrInputSource, type VrInputSourceConfig } from "./VrInputSource.js";
 
 export interface WebsocketInputSourceOpts {
   hostOrUrl: string;
@@ -102,7 +102,7 @@ export class WebsocketInputSource extends VrInputSource<WebsocketInputSourceOpts
   }
 
   sendStart() {
-    if (!this.isOpen) return;
+    if (!this.isOpen || !this.ws) return;
     const builder = new Builder();
     const start = Serialized.Start.createStart(builder);
     Serialized.Message.startMessage(builder);
@@ -112,7 +112,7 @@ export class WebsocketInputSource extends VrInputSource<WebsocketInputSourceOpts
   }
 
   sendStop() {
-    if (!this.isOpen) return;
+    if (!this.isOpen || !this.ws) return;
     const builder = new Builder();
     const stop = Serialized.Stop.createStop(builder);
     Serialized.Message.startMessage(builder);

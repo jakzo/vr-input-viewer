@@ -1,0 +1,13 @@
+{
+  "name": "@jakzo/vr-input-viewer-desktop-frontend",
+  "version": "0.0.0",
+  "description": "VR input viewer desktop app frontend.",
+  "type": "module",
+  "private": true,
+  "author": "jakzo",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@jakzo/vr-input-viewer": "^0.0.0"
+  }
+}

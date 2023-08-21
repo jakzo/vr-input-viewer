@@ -1,7 +1,13 @@
-import { VrInputSource, type VrInputSourceConfig } from "./VrInputSource";
+import { VrInputSource, type VrInputSourceConfig } from "./VrInputSource.js";
 
 export interface WebxrInputSourceOpts {}
 
+/**
+ * NOTE: There does not appear to be a way to track VR device positions/inputs
+ * without entering immersive-vr mode which will block the user from their
+ * actual VR content so this input source will be unused until a workaround is
+ * found.
+ */
 export class WebxrInputSource extends VrInputSource<WebxrInputSourceOpts> {
   static config: VrInputSourceConfig<WebxrInputSourceOpts> = {
     name: "WebXR",
@@ -10,22 +16,22 @@ export class WebxrInputSource extends VrInputSource<WebxrInputSourceOpts> {
 
   override type = WebxrInputSource;
 
-  checkIfSupportedPollFrequency = 15_000;
-  checkIfSupportedTimeout: number;
-  session?: XRSession;
-  referenceSpace?: XRReferenceSpace;
-  lastSessionStartFailed = false;
+  // checkIfSupportedPollFrequency = 15_000;
+  // checkIfSupportedTimeout: number;
+  session: XRSession | undefined;
+  referenceSpace: XRReferenceSpace | undefined;
+  // lastSessionStartFailed = false;
 
   override onOptsChanged(
     _newOpts: WebxrInputSourceOpts,
-    prevOpts: WebxrInputSourceOpts | undefined,
+    _prevOpts: WebxrInputSourceOpts | undefined,
   ) {
-    if (!prevOpts) this.checkIfSupported();
+    // if (!prevOpts) this.checkIfSupported();
   }
 
   override async onStart() {
     if (!this.session) await this.startSession();
-    this.session!.requestAnimationFrame(this.animate);
+    this.session?.requestAnimationFrame(this.animate);
   }
 
   override onUpdate() {
@@ -72,46 +78,43 @@ export class WebxrInputSource extends VrInputSource<WebxrInputSourceOpts> {
   }
 
   override onDestroy() {
-    clearTimeout(this.checkIfSupportedTimeout);
+    // clearTimeout(this.checkIfSupportedTimeout);
   }
 
-  checkIfSupported = async () => {
-    try {
-      this.setAvailable(
-        !!this.session ||
-          (!this.lastSessionStartFailed &&
-            (await navigator.xr?.isSessionSupported("immersive-vr"))),
-      );
-    } finally {
-      this.checkIfSupportedTimeout = window.setTimeout(
-        this.checkIfSupported,
-        this.checkIfSupportedPollFrequency,
-      );
-    }
-  };
+  // checkIfSupported = async () => {
+  //   try {
+  //     this.setAvailable(
+  //       !!this.session ||
+  //         (!this.lastSessionStartFailed &&
+  //           (await navigator.xr?.isSessionSupported("immersive-vr"))),
+  //     );
+  //   } finally {
+  //     this.checkIfSupportedTimeout = window.setTimeout(
+  //       this.checkIfSupported,
+  //       this.checkIfSupportedPollFrequency,
+  //     );
+  //   }
+  // };
 
   startSession = async () => {
     if (this.session) return;
-    const isSupported = await navigator.xr?.isSessionSupported("immersive-vr");
-    if (isSupported) {
-      try {
-        this.session = await navigator.xr.requestSession("inline");
-        this.session.addEventListener("end", this.cleanupSession);
-        this.addInputSources(this.session.inputSources);
-        this.session.addEventListener(
-          "inputsourceschange",
-          this.onInputSourcesChange,
-        );
-        this.referenceSpace = await this.session.requestReferenceSpace(
-          "local-floor",
-        );
-        this.lastSessionStartFailed = false;
-        this.setAvailable(true);
-        return;
-      } catch (err) {
-        console.error("Failed to start WebXR session:", err);
-        this.lastSessionStartFailed = true;
-      }
+    try {
+      // this.session = await navigator.xr!.requestSession("immersive-vr");
+      this.session = await navigator.xr!.requestSession("inline");
+      this.session.addEventListener("end", this.cleanupSession);
+      this.addInputSources(this.session.inputSources);
+      this.session.addEventListener(
+        "inputsourceschange",
+        this.onInputSourcesChange,
+      );
+      this.referenceSpace = await this.session.requestReferenceSpace("local");
+      // this.lastSessionStartFailed = false;
+      this.setAvailable(true);
+      return;
+    } catch (err) {
+      console.error("Failed to start WebXR session:", err);
+      this.session?.end();
+      // this.lastSessionStartFailed = true;
     }
     this.setAvailable(false);
   };
@@ -150,13 +153,16 @@ export class WebxrInputSource extends VrInputSource<WebxrInputSourceOpts> {
     this.session.requestAnimationFrame(this.animate);
 
     for (const xrInputSource of this.session.inputSources) {
-      if (xrInputSource.handedness === "none") continue;
+      if (xrInputSource.handedness === "none" || !xrInputSource.gripSpace)
+        continue;
 
       const controller = this.inputViewer.controllers[xrInputSource.handedness];
       if (!controller) continue;
 
       const transform = this.inputViewer.transforms[xrInputSource.handedness];
       const pose = frame.getPose(xrInputSource.gripSpace, this.referenceSpace);
+      if (!pose) continue;
+
       const pos = pose.transform.position;
       transform.position.set(pos.x, pos.y, pos.z);
       const rot = pose.transform.orientation;

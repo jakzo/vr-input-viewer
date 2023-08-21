@@ -18,6 +18,9 @@ const resolveDep = (name: string, from = __dirname) => {
   throw new Error(`Node module directory not found for: ${name}`);
 };
 
+const regexEscape = (str: string) =>
+  str.replace(/([()[\]./\\?$^*+|])/g, "\\$1");
+
 export default defineConfig({
   plugins: [
     svelte(),
@@ -50,11 +53,9 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: Object.fromEntries(
-      packages.map((pkg) => [
-        pkg.packageJson.name,
-        path.join(pkg.dir, "src", "index.ts"),
-      ]),
-    ),
+    alias: packages.map((pkg) => ({
+      find: new RegExp(`^${regexEscape(pkg.packageJson.name)}$`),
+      replacement: path.join(pkg.dir, "src", "index.ts"),
+    })),
   },
 });

@@ -1,8 +1,6 @@
 {
   "extends": ["./tsconfig.base.json", "@tsconfig/node18/tsconfig"],
-  "exclude": ["**/out/**", "**/dist/**", "**/build/**"],
   "compilerOptions": {
     "lib": ["ES2023", "DOM", "DOM.Iterable"]
-  },
-  "references": []
+  }
 }

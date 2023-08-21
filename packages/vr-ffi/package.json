@@ -1,0 +1,25 @@
+{
+  "name": "@jakzo/vr-ffi",
+  "version": "0.0.0",
+  "description": "Simple interface to use VR libraries live Steam OpenVR, Oculus OVR or OpenXR.",
+  "main": "dist/index.js",
+  "type": "module",
+  "author": "jakzo",
+  "license": "MIT",
+  "files": [
+    "./dist/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx ./scripts/dev.ts"
+  },
+  "devDependencies": {
+    "@types/ffi-napi": "^4.0.7",
+    "@types/ref-array": "^0.0.28"
+  },
+  "dependencies": {
+    "ffi-napi": "^4.0.3",
+    "ref-array-napi": "^1.2.2",
+    "ref-napi": "^3.0.3"
+  }
+}

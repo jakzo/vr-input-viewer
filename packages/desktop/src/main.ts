@@ -1,6 +1,9 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
 
+import { mainListenBridge } from "./tipc/main";
+import { bridge } from "./bridge";
+
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
 
@@ -38,3 +41,5 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
+
+mainListenBridge(bridge);

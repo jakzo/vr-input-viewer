@@ -2,6 +2,7 @@
 const config = {
   packagerConfig: {
     asar: true,
+    extraResource: [],
   },
   rebuildConfig: {},
   makers: [

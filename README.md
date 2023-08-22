@@ -18,6 +18,9 @@ Visualization of VR controller and headset inputs and positions. Useful for stre
 
 ## 🛠️ Development setup
 
+- Clone with submodules
+  - When first cloning: `git clone --recursive THIS_REPO_URL`
+  - Or if already cloned: `git submodule update --init --recursive`
 - Install [Node.js](https://nodejs.org/en/download)
   - Recommended: Install [nvm](https://github.com/nvm-sh/nvm) instead of Node.js and run `nvm install`/`nvm use` in this repository
 - Install [Flatbuffers](https://flatbuffers.dev/)

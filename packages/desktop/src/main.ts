@@ -3,11 +3,7 @@ import path from "path";
 
 import { mainListenBridge } from "./tipc/main";
 import { bridge } from "./bridge";
-
-declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
-declare const MAIN_WINDOW_VITE_NAME: string;
-
-const isDev = !!MAIN_WINDOW_VITE_DEV_SERVER_URL;
+import { isDev } from "./env";
 
 if (require("electron-squirrel-startup")) {
   app.quit();
@@ -22,7 +18,7 @@ const createWindow = () => {
     },
   });
 
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+  if (isDev) {
     win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     win.webContents.openDevTools();
   } else {

@@ -8,6 +8,8 @@
   "license": "MIT",
   "main": "src/index.ts",
   "dependencies": {
-    "@jakzo/vr-input-viewer": "^0.0.0"
+    "@jakzo/vr-ffi": "^0.0.0",
+    "@jakzo/vr-input-viewer-frontend": "^0.0.0",
+    "three": "^0.147.0"
   }
 }

@@ -9,6 +9,7 @@
   import type {
     VrInputSource,
     VrInputSourceConfigOpt,
+    VrInputSourceType,
   } from "./input-sources/VrInputSource.js";
 
   let log: Logger;
@@ -38,23 +39,14 @@
   let settings: Settings = loadSavedSettings();
   $: localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings));
 
-  export let inputSources: VrInputSource[];
+  export let inputSourceTypes: VrInputSourceType<any>[];
+  let inputSources: VrInputSource<any>[];
   let inputSourceAvailability: (boolean | undefined)[];
   const setInputSourceAvailability = () => {
     inputSourceAvailability = inputSources.map((s) => s.isAvailable);
   };
-  for (const inputSource of inputSources) {
-    inputSource.onAvailable = setInputSourceAvailability;
-  }
-  $: {
-    setInputSourceAvailability();
-    for (const inputSource of inputSources) {
-      inputSource.onAvailable = setInputSourceAvailability;
-    }
-  }
-  $: for (const inputSource of inputSources) inputSource.log = log;
-  $: for (const inputSource of inputSources) {
-    const { config } = inputSource.type;
+  const getInputSourceOpts = (type: VrInputSourceType<any>) => {
+    const { config } = type;
     if (!settings.inputSourceOpts[config.name])
       settings.inputSourceOpts[config.name] = {};
     const values = settings.inputSourceOpts[config.name]!;
@@ -64,7 +56,20 @@
     for (const [key, opt] of optEntries) {
       if (!(key in values)) values[key] = opt.defaultValue;
     }
-    inputSource.setOpts(settings.inputSourceOpts[config.name]);
+    const opts = settings.inputSourceOpts[config.name];
+    return opts;
+  };
+  $: {
+    inputSources = inputSourceTypes.map(
+      (Type) =>
+        inputSources.find((source) => source.constructor === Type) ??
+        new Type(log, getInputSourceOpts(Type), setInputSourceAvailability)
+    );
+    setInputSourceAvailability();
+  }
+  $: if (settings) {
+    for (const inputSource of inputSources)
+      inputSource.setOpts(getInputSourceOpts(inputSource.type));
   }
   onDestroy(() => {
     for (const inputSource of inputSources) {

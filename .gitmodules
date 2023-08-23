@@ -1,3 +1,6 @@
 [submodule "packages/vr-ffi/deps/openvr"]
 	path = packages/vr-ffi/deps/openvr
 	url = https://github.com/ValveSoftware/openvr.git
+[submodule "packages/vr-ffi/deps/node-openvr"]
+	path = packages/vr-ffi/deps/node-openvr
+	url = https://github.com/node-xr/node-openvr.git

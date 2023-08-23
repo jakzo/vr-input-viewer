@@ -1,1 +1,1 @@
-export { OpenVR } from "./OpenVR.js";
+export * from "./OpenVR.js";

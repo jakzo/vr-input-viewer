@@ -4,7 +4,11 @@ import type { Logger } from "../types.js";
 export interface VrInputSourceType<Opts> {
   config: VrInputSourceConfig<Opts>;
 
-  new (log: Logger, opts: Opts): VrInputSource<Opts>;
+  new (
+    log: Logger,
+    opts: Opts,
+    onAvailable: (value: boolean) => void,
+  ): VrInputSource<Opts>;
 }
 
 export interface VrInputSourceConfig<Opts = unknown> {
@@ -24,17 +28,17 @@ export interface VrInputSourceConfigOpt<T = unknown> {
  * The constructor may initiate a connection to the input source but should not
  * cause heavy resource usage. Save that for the `start()` call.
  */
-export abstract class VrInputSource<Opts = unknown> {
+export abstract class VrInputSource<Opts> {
   abstract type: VrInputSourceType<Opts>;
 
   isAvailable: boolean | undefined = undefined;
   isStarted = false;
   inputViewer: InputViewer | undefined = undefined;
-  onAvailable: ((value: boolean) => void) | undefined = undefined;
 
   constructor(
     public log: Logger,
     public opts: Opts,
+    public onAvailable: (value: boolean) => void,
   ) {}
 
   /**

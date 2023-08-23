@@ -10,13 +10,16 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "postinstall": "electron-rebuild"
   },
   "dependencies": {
+    "@jakzo/vr-ffi": "^0.0.0",
     "@jakzo/vr-input-viewer-desktop-frontend": "^0.0.0",
     "electron-squirrel-startup": "^1.0.0"
   },
   "devDependencies": {
+    "@electron/rebuild": "^3.3.0",
     "@electron-forge/cli": "^6.3.0",
     "@electron-forge/maker-deb": "^6.3.0",
     "@electron-forge/maker-rpm": "^6.3.0",
@@ -25,7 +28,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^6.3.0",
     "@electron-forge/plugin-vite": "^6.3.0",
     "@jakzo/vr-input-viewer-config": "^0.0.0",
-    "electron": "25.5.0",
+    "electron": "26.0.0",
     "prettier": "^3.0.1",
     "vite": "^4.4.9"
   }

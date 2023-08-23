@@ -1,20 +1,11 @@
-import * as THREE from "three";
+import { Handedness } from "./types.js";
 
-export type Handedness = "left" | "right";
 export type VirtualXRInputSource = DeepMutable<XRInputSource> & {
   handedness: Handedness;
   gamepad: DeepMutable<Gamepad>;
 };
-export type Transforms = Record<"hmd" | Handedness, Transform>;
 
 export type DeepMutable<T> = { -readonly [P in keyof T]: DeepMutable<T[P]> };
-
-export class Transform {
-  constructor(
-    public position = new THREE.Vector3(),
-    public rotation = new THREE.Quaternion(),
-  ) {}
-}
 
 export const throttle = (ms: number, fn: () => void): (() => void) => {
   let isWaiting = false;

@@ -1,11 +1,7 @@
 import { ControllerHud } from "./Controller/ControllerHud.js";
 import { PositionViewer } from "./PositionViewer/PositionViewer.js";
-import {
-  Handedness,
-  Transform,
-  Transforms,
-  VirtualXRInputSource,
-} from "./utils/utils.js";
+import { Handedness, Transform, Transforms } from "./utils/types.js";
+import { VirtualXRInputSource } from "./utils/utils.js";
 
 const DEFAULT_HEADSET_PROFILE = "oculus-quest2";
 // https://immersive-web.github.io/webxr-input-profiles/packages/viewer/dist/index.html

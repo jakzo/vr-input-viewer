@@ -2,7 +2,7 @@ import { app, BrowserWindow } from "electron";
 import path from "path";
 
 import { mainListenBridge } from "./tipc/main";
-import { bridge } from "./bridge";
+import { vrFfiBridge } from "./vr-ffi-bridge";
 import { isDev } from "./env";
 
 if (require("electron-squirrel-startup")) {
@@ -11,8 +11,8 @@ if (require("electron-squirrel-startup")) {
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: isDev ? 1200 : 600,
-    height: 600,
+    width: isDev ? 1600 : 600,
+    height: isDev ? 900 : 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
@@ -38,4 +38,4 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-mainListenBridge(bridge);
+mainListenBridge(vrFfiBridge);

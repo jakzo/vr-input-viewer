@@ -3,12 +3,8 @@
 import { startApp } from "@jakzo/vr-input-viewer-desktop-frontend";
 
 import { rendererCreateBridge } from "./tipc/renderer.js";
-import type { bridge } from "./bridge.js";
+import type { vrFfiBridge } from "./vr-ffi-bridge.js";
+
+window.vrFfiBridge = rendererCreateBridge<typeof vrFfiBridge>();
 
 startApp();
-
-const api = rendererCreateBridge<typeof bridge>();
-
-setInterval(async () => {
-  console.log("=== ping", await api.ping());
-}, 5000);

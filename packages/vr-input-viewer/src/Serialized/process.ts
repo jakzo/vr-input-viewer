@@ -6,7 +6,7 @@ import {
   Transform as SerializedTransform,
   ControllerInput,
 } from "./Serialized.js";
-import { Handedness, Transform } from "../utils/utils.js";
+import { Handedness, Transform } from "../utils/types.js";
 
 const MAX_BUTTON_VALUE = (1 << 14) - 1;
 

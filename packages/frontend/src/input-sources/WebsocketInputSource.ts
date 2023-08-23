@@ -1,6 +1,10 @@
 import { Builder } from "flatbuffers";
 import { Serialized, processSerializedMessage } from "@jakzo/vr-input-viewer";
-import { VrInputSource, type VrInputSourceConfig } from "./VrInputSource.js";
+import {
+  VrInputSource,
+  VrInputSourceArgs,
+  type VrInputSourceConfig,
+} from "./VrInputSource.js";
 
 export interface WebsocketInputSourceOpts {
   hostOrUrl: string;
@@ -26,9 +30,15 @@ export class WebsocketInputSource extends VrInputSource<WebsocketInputSourceOpts
   retryDelay = 15_000;
   retryTimeout: number | undefined;
 
+  constructor(...args: VrInputSourceArgs<WebsocketInputSourceOpts>) {
+    super(...args);
+
+    this.connect(this.opts.hostOrUrl, true);
+  }
+
   override onOptsChanged(
     newOpts: WebsocketInputSourceOpts,
-    prevOpts: WebsocketInputSourceOpts | undefined,
+    prevOpts: WebsocketInputSourceOpts,
   ) {
     if (newOpts.hostOrUrl !== prevOpts?.hostOrUrl)
       this.connect(newOpts.hostOrUrl, true);
@@ -69,7 +79,7 @@ export class WebsocketInputSource extends VrInputSource<WebsocketInputSourceOpts
 
     this.ws.addEventListener("error", () => {
       if (this.isOpen) this.log.warn("Connection error");
-      else if (isInitialConnection) {
+      else if (isInitialConnection && this.isStarted) {
         this.log.warn(
           `Failed to connect to ${
             urlStr === "ws://127.0.0.1:6161/" ? "this device" : urlStr

@@ -40,7 +40,7 @@
   $: localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings));
 
   export let inputSourceTypes: VrInputSourceType<any>[];
-  let inputSources: VrInputSource<any>[];
+  let inputSources: VrInputSource<any>[] = [];
   let inputSourceAvailability: (boolean | undefined)[];
   const setInputSourceAvailability = () => {
     inputSourceAvailability = inputSources.map((s) => s.isAvailable);
@@ -59,7 +59,7 @@
     const opts = settings.inputSourceOpts[config.name];
     return opts;
   };
-  $: {
+  $: if (log) {
     inputSources = inputSourceTypes.map(
       (Type) =>
         inputSources.find((source) => source.constructor === Type) ??
@@ -77,11 +77,35 @@
       inputSource.destroy();
     }
   });
+
+  let activeInputSource: VrInputSource<unknown> | undefined;
+  let inputSourceUpdateHandle: number | undefined;
+  const inputSourceOnUpdate = () => {
+    if (!activeInputSource?.isStarted) {
+      inputSourceUpdateHandle = undefined;
+      return;
+    }
+    activeInputSource.update();
+    inputSourceUpdateHandle = requestAnimationFrame(inputSourceOnUpdate);
+  };
   $: {
-    const inputSource = inputSources.find(
+    activeInputSource = inputSources.find(
       (s) => s.type.config.name === settings.inputSource
     );
-    if (inputSource && !inputSource.isStarted) inputSource.start();
+    if (activeInputSource && !activeInputSource.isStarted) {
+      activeInputSource.start();
+    }
+    for (const oldSource of inputSources) {
+      if (oldSource === activeInputSource || !oldSource.isStarted) continue;
+      oldSource.stop();
+    }
+
+    if (activeInputSource && !inputSourceUpdateHandle) {
+      inputSourceUpdateHandle = requestAnimationFrame(inputSourceOnUpdate);
+    } else if (!activeInputSource && inputSourceUpdateHandle) {
+      cancelAnimationFrame(inputSourceUpdateHandle);
+      inputSourceUpdateHandle = undefined;
+    }
   }
 
   let inputViewerContainer: HTMLDivElement;

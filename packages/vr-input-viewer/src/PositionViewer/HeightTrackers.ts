@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Handedness, Transforms } from "../utils/utils.js";
+import { Handedness, Transforms } from "../utils/types.js";
 import { RollingMedian } from "../utils/RollingMedian.js";
 
 export class HeightTrackers {
@@ -43,10 +43,7 @@ export class HeightTrackers {
     for (const key of Object.keys(this.transforms) as (keyof Transforms)[]) {
       const position = this.transforms[key].position;
       const tracker = this.trackers[key];
-
-      tracker.position.x = -position.x;
-      tracker.position.y = position.y / 2;
-      tracker.position.z = position.z;
+      tracker.position.set(position.x, position.y / 2, position.z);
       tracker.scale.y = position.y;
     }
 
@@ -58,7 +55,7 @@ export class HeightTrackers {
     const hmdPos = this.transforms.hmd.position;
     this.heightLog.push([now, hmdPos.y]);
     this.heightMarker.position.set(
-      -hmdPos.x,
+      hmdPos.x,
       this.heightLog.median()?.[1] ?? 0,
       hmdPos.z,
     );

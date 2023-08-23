@@ -3,4 +3,4 @@
   import { OpenvrInputSource } from "./input-sources/OpenvrInputSource.js";
 </script>
 
-<App inputSourceTypes={[WebsocketInputSource, OpenvrInputSource]} />
+<App inputSourceTypes={[OpenvrInputSource, WebsocketInputSource]} />

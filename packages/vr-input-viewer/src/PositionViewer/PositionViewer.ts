@@ -6,14 +6,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import { createEnvironment } from "../Environment.js";
 import { createHeadset } from "./Headset.js";
-import {
-  Handedness,
-  Transforms,
-  VirtualXRInputSource,
-  throttle,
-} from "../utils/utils.js";
+import { VirtualXRInputSource, throttle } from "../utils/utils.js";
 import { Grid } from "./Grid.js";
 import { HeightTrackers } from "./HeightTrackers.js";
+import { Transforms, Handedness } from "../utils/types.js";
 
 export interface PositionViewerOpts {
   container: HTMLElement;
@@ -48,7 +44,7 @@ export class PositionViewer {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    this.camera.position.set(0, 1.8, -1.4);
+    this.camera.position.set(0, 1.8, 1.4);
 
     this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -106,7 +102,7 @@ export class PositionViewer {
     const container = new THREE.Group();
     const gripSpace = new THREE.Group();
     gripSpace.add(this.controllerModelFactory.createControllerModel(gripSpace));
-    gripSpace.position.z += 0.02;
+    // gripSpace.position.z += 0.02;
     this.scene.add(container);
     return { gripSpace, container };
   }
@@ -136,13 +132,8 @@ export class PositionViewer {
     this.stats?.begin();
 
     for (const [obj, { position, rotation }] of this.transforms) {
-      obj.position.x = -position.x;
-      obj.position.y = position.y;
-      obj.position.z = position.z;
-
+      obj.position.copy(position);
       obj.setRotationFromQuaternion(rotation);
-      obj.rotateX(Math.PI * 0.75);
-      obj.rotateZ(Math.PI);
     }
 
     this.grid.update();

@@ -27,6 +27,12 @@ const resolveDep = (
 const regexEscape = (str: string) =>
   str.replace(/([()[\]./\\?$^*+|])/g, "\\$1");
 
+export const generateMonorepoAliases = () =>
+  packages.map((pkg) => ({
+    find: new RegExp(`^${regexEscape(pkg.packageJson.name)}$`),
+    replacement: path.join(pkg.dir, "src", "index.ts"),
+  }));
+
 export const createViteConfig = () => {
   const config: UserConfig = {
     plugins: [
@@ -62,10 +68,7 @@ export const createViteConfig = () => {
       }),
     ],
     resolve: {
-      alias: packages.map((pkg) => ({
-        find: new RegExp(`^${regexEscape(pkg.packageJson.name)}$`),
-        replacement: path.join(pkg.dir, "src", "index.ts"),
-      })),
+      alias: generateMonorepoAliases(),
     },
   };
   return config;

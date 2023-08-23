@@ -1,1 +1,1 @@
-export { createViteConfig } from "./vite.js";
+export { createViteConfig, generateMonorepoAliases } from "./vite.js";

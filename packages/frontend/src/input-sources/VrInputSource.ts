@@ -24,6 +24,12 @@ export interface VrInputSourceConfigOpt<T = unknown> {
   tip?: string;
 }
 
+export type VrInputSourceArgs<Opts> = VrInputSourceType<Opts> extends {
+  new (...args: infer Args): unknown;
+}
+  ? Args
+  : never;
+
 /**
  * The constructor may initiate a connection to the input source but should not
  * cause heavy resource usage. Save that for the `start()` call.

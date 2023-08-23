@@ -12,8 +12,7 @@ export const createHeadset = (headsetName: string, assetsBaseUrl?: string) => {
     loader.load(
       new URL(`headsets/${headsetName}.glb`, baseUrl).toString(),
       (gltf) => {
-        // TODO: Bake these into the model
-        gltf.scene.rotateX(Math.PI * -0.3);
+        // TODO: Bake this into the model
         gltf.scene.rotateY(Math.PI);
         const mesh = gltf.scene.children[0] as THREE.Mesh;
         const material = mesh.material as THREE.MeshStandardMaterial;

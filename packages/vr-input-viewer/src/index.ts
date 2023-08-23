@@ -6,3 +6,5 @@ export { processSerializedMessage } from "./Serialized/process.js";
 
 import { layouts as layoutsObj } from "./Controller/layouts.js";
 export const layouts = Object.keys(layoutsObj);
+
+export * from "./utils/types.js";

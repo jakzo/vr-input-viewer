@@ -6,3 +6,5 @@ export const startApp = () =>
   new DesktopApp({
     target: document.getElementById("app")!,
   });
+
+export * from "./types.js";

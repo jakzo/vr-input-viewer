@@ -1,12 +1,12 @@
-import type { TrackedDevicePose_t } from "openvr";
+import type { OpenVR } from "@jakzo/vr-ffi";
 
 export interface VrFfiBridge {
   openvrIsAvailable: () => Promise<boolean>;
   openvrInit: () => Promise<void>;
   openvrGetInputs: () => Promise<{
-    hmd: TrackedDevicePose_t | null;
-    left: TrackedDevicePose_t | null;
-    right: TrackedDevicePose_t | null;
+    hmd: OpenVR.TrackedDevicePose | null;
+    left: OpenVR.TrackedDevicePose | null;
+    right: OpenVR.TrackedDevicePose | null;
   }>;
   openvrShutdown: () => Promise<void>;
 }

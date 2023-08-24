@@ -1,1 +1,3 @@
-export * from "./OpenVR.js";
+import * as OpenVR from "./OpenVR";
+
+export { OpenVR };

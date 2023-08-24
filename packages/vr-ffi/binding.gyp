@@ -8,8 +8,8 @@
     ],
     "targets": [
         {
-            "target_name": "vr-ffi",
-            "sources": ["src/bindings.cpp", "src/ivrsystem.cpp", "src/openvr.cpp"],
+            "target_name": "openvr",
+            "sources": ["src/OpenVR/cpp/bindings.cpp", "src/OpenVR/cpp/ivrsystem.cpp", "src/OpenVR/cpp/openvr.cpp"],
             "include_dirs": [
                 "<!(node -e \"require('nan')\")",
                 "<(module_root_dir)/deps/openvr/headers",

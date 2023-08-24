@@ -3,32 +3,32 @@ import type { VrFfiBridge } from "@jakzo/vr-input-viewer-desktop-frontend";
 import { OpenVR } from "@jakzo/vr-ffi";
 import { declareBridgeApi } from "./tipc/main";
 
-let ivrSystem: ReturnType<typeof OpenVR.VR_Init> | undefined;
+let ivrSystem: ReturnType<typeof OpenVR.Init> | undefined;
 
 export const vrFfiBridge = declareBridgeApi({
   async openvrIsAvailable() {
-    return OpenVR.VR_IsRuntimeInstalled() && OpenVR.VR_IsHmdPresent();
+    return OpenVR.IsRuntimeInstalled() && OpenVR.IsHmdPresent();
   },
   async openvrInit() {
-    ivrSystem = OpenVR.VR_Init(OpenVR.EVRApplicationType.Background);
+    ivrSystem = OpenVR.Init(OpenVR.VRApplicationType.Background);
   },
   async openvrGetInputs() {
     if (!ivrSystem) throw new Error("openvrInit() must be called first");
 
     const indexesHmd = ivrSystem.GetSortedTrackedDeviceIndicesOfClass(
-      OpenVR.ETrackedDeviceClass.HMD,
+      OpenVR.TrackedDeviceClass.HMD,
     );
     const indexHmd = indexesHmd[0];
 
     const indexesController = ivrSystem.GetSortedTrackedDeviceIndicesOfClass(
-      OpenVR.ETrackedDeviceClass.Controller,
+      OpenVR.TrackedDeviceClass.Controller,
     );
     // TODO: Use ivrSystem.GetControllerRoleForTrackedDeviceIndex() for hand
     const indexControllerLeft = indexesController.find((index) => index === 1);
     const indexControllerRight = indexesController.find((index) => index === 2);
 
     const poses = ivrSystem.GetDeviceToAbsoluteTrackingPose(
-      OpenVR.ETrackingUniverseOrigin.Standing,
+      OpenVR.TrackingUniverseOrigin.Standing,
       0,
     );
 
@@ -43,6 +43,6 @@ export const vrFfiBridge = declareBridgeApi({
     };
   },
   async openvrShutdown() {
-    OpenVR.VR_Shutdown();
+    OpenVR.Shutdown();
   },
 } satisfies VrFfiBridge);

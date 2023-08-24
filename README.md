@@ -23,6 +23,8 @@ Visualization of VR controller and headset inputs and positions. Useful for stre
   - Or if already cloned: `git submodule update --init --recursive`
 - Install [Node.js](https://nodejs.org/en/download)
   - Recommended: Install [nvm](https://github.com/nvm-sh/nvm) instead of Node.js and run `nvm install`/`nvm use` in this repository
+- Install native module build tools
+  - Node.js Windows installer will prompt if you want to install these
 - (optional) Install [Flatbuffers](https://flatbuffers.dev/)
   - Installing Flatbuffers is not required if you will not be modifying the input data format
   - Mac: `brew install flatbuffers`

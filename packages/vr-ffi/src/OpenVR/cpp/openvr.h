@@ -1,11 +1,5 @@
-#ifndef NODE_OPENVR_H
-#define NODE_OPENVR_H
+#pragma once
 
-#include <nan.h>
+#include <napi.h>
 
-NAN_METHOD(Init);
-NAN_METHOD(Shutdown);
-NAN_METHOD(IsHmdPresent);
-NAN_METHOD(IsRuntimeInstalled);
-
-#endif
+Napi::Value IsRuntimeInstalled(const Napi::CallbackInfo &info);

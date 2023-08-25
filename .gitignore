@@ -23,6 +23,7 @@ Desktop.ini
 *.sublime*
 *.iml
 *.tsbuildinfo
+c_cpp_properties.json
 
 # Builds and dependencies
 dist/

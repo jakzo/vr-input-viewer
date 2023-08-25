@@ -21,4 +21,4 @@ interface OpenvrNative {
   IsRuntimeInstalled(): boolean;
 }
 
-export const native = require("bindings")("openvr") as OpenvrNative;
+export const native = require("../../build/Release/openvr") as OpenvrNative;

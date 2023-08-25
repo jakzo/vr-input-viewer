@@ -28,6 +28,28 @@ Visualization of VR controller and headset inputs and positions. Useful for stre
 - (optional) Install [Flatbuffers](https://flatbuffers.dev/)
   - Installing Flatbuffers is not required if you will not be modifying the input data format
   - Mac: `brew install flatbuffers`
+- (optional) Set up C++ node-addon-api development
+
+  - If using VSCode, add a `.vscode/c_cpp_properties.json` file in this project with contents:
+
+    ```json
+    {
+      "version": 4,
+      "configurations": [
+        {
+          "name": "default",
+          "defines": ["NAPI_DISABLE_CPP_EXCEPTIONS"],
+          "includePath": [
+            "${workspaceFolder}/node_modules/node-addon-api",
+            "${workspaceFolder}/packages/vr-ffi/src/**",
+            "${workspaceFolder}/packages/vr-ffi/deps/openvr/headers",
+            "~/.nvm/versions/node/v20.2.0/include/node" // <- replace with your directory
+          ]
+        }
+      ]
+    }
+    ```
+
 - Install dependencies
   - `npm install`
 - Run the input viewer locally

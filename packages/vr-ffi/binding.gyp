@@ -9,9 +9,18 @@
     "targets": [
         {
             "target_name": "openvr",
-            "sources": ["src/OpenVR/cpp/bindings.cpp", "src/OpenVR/cpp/ivrsystem.cpp", "src/OpenVR/cpp/openvr.cpp"],
+            "cflags!": [ "-fno-exceptions" ],
+            "cflags_cc!": [ "-fno-exceptions" ],
+            "xcode_settings": { "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+                "CLANG_CXX_LIBRARY": "libc++",
+                "MACOSX_DEPLOYMENT_TARGET": "10.7",
+            },
+            "msvs_settings": {
+                "VCCLCompilerTool": { "ExceptionHandling": 1 },
+            },
+            "sources": ["src/OpenVR/cpp/openvr.cpp", "src/OpenVR/cpp/ivrsystem.cpp"],
             "include_dirs": [
-                "<!(node -e \"require('nan')\")",
+                "<!(node -p \"require('node-addon-api').include_dir\")",
                 "<(module_root_dir)/deps/openvr/headers",
             ],
             "conditions": [

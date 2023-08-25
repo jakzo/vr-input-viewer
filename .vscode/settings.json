@@ -9,7 +9,8 @@
     "ratio": "cpp",
     "tuple": "cpp",
     "type_traits": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "xiosbase": "cpp"
   },
   "editor.formatOnSave": true,
   "[typescript]": {

@@ -1,33 +1,28 @@
-#ifndef NODE_IVRSYSTEM_H
-#define NODE_IVRSYSTEM_H
+#pragma once
 
-#include <nan.h>
+#include <napi.h>
 
 namespace vr {
 class IVRSystem;
 }
 
-class IVRSystem : public Nan::ObjectWrap {
+class IVRSystem : public Napi::ObjectWrap<IVRSystem> {
 public:
-  static NAN_MODULE_INIT(Init);
+  static void Initialize(Napi::Env &env, const Napi::Object &exports);
 
-  static v8::Local<v8::Object> NewInstance(vr::IVRSystem *system);
+  static Napi::Object NewInstance(Napi::Env env, vr::IVRSystem *system);
+
+  Napi::Value
+  GetSortedTrackedDeviceIndicesOfClass(const Napi::CallbackInfo &info);
+  Napi::Value GetDeviceToAbsoluteTrackingPose(const Napi::CallbackInfo &info);
 
 private:
-  explicit IVRSystem(vr::IVRSystem *self);
-  ~IVRSystem() = default;
+  vr::IVRSystem *system;
 
-  static NAN_METHOD(New);
+  static Napi::FunctionReference constructor;
+  static bool isCppInstantiating;
 
-  static NAN_METHOD(GetSortedTrackedDeviceIndicesOfClass);
-  static NAN_METHOD(GetDeviceToAbsoluteTrackingPose);
+  explicit IVRSystem(const Napi::CallbackInfo &info);
 
-  static inline Nan::Persistent<v8::Function> &constructor() {
-    static Nan::Persistent<v8::Function> the_constructor;
-    return the_constructor;
-  }
-
-  vr::IVRSystem *const self_;
+  friend class Napi::ObjectWrap<IVRSystem>;
 };
-
-#endif

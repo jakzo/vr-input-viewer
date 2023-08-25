@@ -8,7 +8,7 @@ import {
 declare class IVRSystem {
   GetDeviceToAbsoluteTrackingPose(
     origin: TrackingUniverseOrigin,
-    fPredictedSecondsToPhotonsFromNow: number,
+    predictedSecondsToPhotonsFromNow: number,
   ): TrackedDeviceResult;
   GetSortedTrackedDeviceIndicesOfClass(device: TrackedDeviceClass): number[];
 }

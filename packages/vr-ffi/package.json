@@ -1,7 +1,7 @@
 {
   "name": "@jakzo/vr-ffi",
   "version": "0.0.0",
-  "description": "Simple interface to use VR libraries live Steam OpenVR, Oculus LibOVR or OpenXR.",
+  "description": "Simple interface to use VR libraries like Steam OpenVR, Oculus LibOVR or OpenXR.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "commonjs",
@@ -10,15 +10,14 @@
   "files": [
     "./dist/"
   ],
+  "gypfile": true,
   "scripts": {
+    "rebuild-and-test": "npm rebuild && npm run test",
+    "test": "tsx ./tests/bindings.ts",
     "build": "tsc",
     "serial": "tsx ./serial.mts"
   },
   "dependencies": {
-    "bindings": "^1.5.0",
-    "nan": "^2.17.0"
-  },
-  "devDependencies": {
-    "@types/bindings": "^1.5.1"
+    "node-addon-api": "7.0.0"
   }
 }

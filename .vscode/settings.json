@@ -10,7 +10,13 @@
     "tuple": "cpp",
     "type_traits": "cpp",
     "vector": "cpp",
-    "xiosbase": "cpp"
+    "xiosbase": "cpp",
+    "__node_handle": "cpp",
+    "atomic": "cpp",
+    "locale": "cpp",
+    "optional": "cpp",
+    "system_error": "cpp",
+    "string": "cpp"
   },
   "editor.formatOnSave": true,
   "[typescript]": {

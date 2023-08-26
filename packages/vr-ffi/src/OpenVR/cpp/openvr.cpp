@@ -1,4 +1,5 @@
 #include "openvr.h"
+#include "guards.h"
 #include "ivrsystem.h"
 
 #include <napi.h>
@@ -7,11 +8,7 @@
 Napi::Value IsRuntimeInstalled(const Napi::CallbackInfo &info) {
   auto env = info.Env();
 
-  if (info.Length() != 0) {
-    Napi::TypeError::New(env, "Wrong number of arguments")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  ASSERT_ARG_COUNT(info, env, 0, 0)
 
   const auto result = vr::VR_IsRuntimeInstalled();
   return Napi::Boolean::New(env, result);
@@ -20,11 +17,7 @@ Napi::Value IsRuntimeInstalled(const Napi::CallbackInfo &info) {
 Napi::Value IsHmdPresent(const Napi::CallbackInfo &info) {
   auto env = info.Env();
 
-  if (info.Length() != 0) {
-    Napi::TypeError::New(env, "Wrong number of arguments")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  ASSERT_ARG_COUNT(info, env, 0, 0)
 
   const auto result = vr::VR_IsHmdPresent();
   return Napi::Boolean::New(env, result);
@@ -33,31 +26,14 @@ Napi::Value IsHmdPresent(const Napi::CallbackInfo &info) {
 Napi::Value Init(const Napi::CallbackInfo &info) {
   auto env = info.Env();
 
-  if (info.Length() != 1) {
-    Napi::TypeError::New(env, "Wrong number of arguments")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  ASSERT_ARG_COUNT(info, env, 1, 1)
+  ASSERT_ARG_ENUM(info, env, 0, 0, vr::VRApplication_Max, VRApplicationType)
 
-  if (!info[0].IsNumber()) {
-    Napi::TypeError::New(env,
-                         "Argument[0] must be a number (VRApplicationType)")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
-
-  const auto applicationType = info[0].As<Napi::Number>().Int32Value();
-  constexpr auto applicationTypeMax = vr::VRApplication_Max;
-  if (applicationType < 0 || applicationType >= applicationTypeMax) {
-    Napi::TypeError::New(
-        env, "Argument[0] was out of enum range (VRApplicationType).")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  const auto applicationType = static_cast<vr::EVRApplicationType>(
+      info[0].As<Napi::Number>().Uint32Value());
 
   vr::EVRInitError error;
-  auto *system =
-      vr::VR_Init(&error, static_cast<vr::EVRApplicationType>(applicationType));
+  auto *system = vr::VR_Init(&error, applicationType);
 
   if (system == nullptr) {
     Napi::Error::New(env, vr::VR_GetVRInitErrorAsEnglishDescription(error))
@@ -71,11 +47,7 @@ Napi::Value Init(const Napi::CallbackInfo &info) {
 Napi::Value Shutdown(const Napi::CallbackInfo &info) {
   auto env = info.Env();
 
-  if (info.Length() != 0) {
-    Napi::TypeError::New(env, "Wrong number of arguments")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  ASSERT_ARG_COUNT(info, env, 0, 0)
 
   vr::VR_Shutdown();
   return env.Undefined();

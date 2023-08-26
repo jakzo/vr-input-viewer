@@ -14,6 +14,10 @@ public:
 
   Napi::Value
   GetSortedTrackedDeviceIndicesOfClass(const Napi::CallbackInfo &info);
+  Napi::Value
+  GetTrackedDeviceIndexForControllerRole(const Napi::CallbackInfo &info);
+  Napi::Value GetStringTrackedDeviceProperty(const Napi::CallbackInfo &info);
+  Napi::Value GetControllerState(const Napi::CallbackInfo &info);
   Napi::Value GetDeviceToAbsoluteTrackingPose(const Napi::CallbackInfo &info);
 
 private:

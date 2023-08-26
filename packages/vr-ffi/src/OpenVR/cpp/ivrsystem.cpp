@@ -1,5 +1,6 @@
 #include "ivrsystem.h"
-#include "util.h"
+#include "cpptonode.h"
+#include "guards.h"
 
 #include <array>
 #include <openvr.h>
@@ -42,8 +43,6 @@ IVRSystem::IVRSystem(const Napi::CallbackInfo &info)
 }
 
 Napi::Object IVRSystem::NewInstance(Napi::Env env, vr::IVRSystem *system) {
-  const auto scope(env);
-
   isCppInstantiating = true;
   return constructor.New({Napi::External<vr::IVRSystem>::New(env, system)});
 }
@@ -52,84 +51,116 @@ Napi::Value IVRSystem::GetSortedTrackedDeviceIndicesOfClass(
     const Napi::CallbackInfo &info) {
   auto env = info.Env();
 
-  if (info.Length() < 1 || info.Length() > 2) {
-    Napi::TypeError::New(env, "Wrong number of arguments")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  ASSERT_ARG_COUNT(info, env, 1, 2)
+  ASSERT_ARG_ENUM(info, env, 0, 0, 6, TrackedDeviceClass)
 
-  if (!info[0].IsNumber()) {
-    Napi::TypeError::New(env,
-                         "Argument[0] must be a number (TrackedDeviceClass)")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
-
-  const auto trackedDeviceClass = info[0].As<Napi::Number>().Uint32Value();
-  if (trackedDeviceClass < 0 || trackedDeviceClass >= 6) {
-    Napi::TypeError::New(
-        env, "Argument[0] was out of enum range (TrackedDeviceClass).")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  const auto trackedDeviceClass = static_cast<vr::ETrackedDeviceClass>(
+      info[0].As<Napi::Number>().Uint32Value());
 
   vr::TrackedDeviceIndex_t relativeToTrackedDeviceIndex = 0;
   if (!info[1].IsUndefined()) {
-    if (!info[1].IsNumber()) {
-      Napi::TypeError::New(env, "Argument[1] must be a number")
-          .ThrowAsJavaScriptException();
-      return env.Undefined();
-    }
-
+    ASSERT_ARG_NUMBER(info, env, 1)
     relativeToTrackedDeviceIndex = info[1].As<Napi::Number>().Int32Value();
   }
 
   TrackedDeviceIndexArray trackedDeviceIndexArray;
-  uint32_t nDeviceIndices = system->GetSortedTrackedDeviceIndicesOfClass(
-      static_cast<vr::ETrackedDeviceClass>(trackedDeviceClass),
-      trackedDeviceIndexArray.data(),
+  auto numDeviceIndices = system->GetSortedTrackedDeviceIndicesOfClass(
+      trackedDeviceClass, trackedDeviceIndexArray.data(),
       static_cast<uint32_t>(trackedDeviceIndexArray.size()),
       relativeToTrackedDeviceIndex);
 
-  return cppToNode(env, trackedDeviceIndexArray, nDeviceIndices);
+  return cppToNode(env, trackedDeviceIndexArray, numDeviceIndices);
+}
+
+Napi::Value IVRSystem::GetTrackedDeviceIndexForControllerRole(
+    const Napi::CallbackInfo &info) {
+  auto env = info.Env();
+
+  ASSERT_ARG_COUNT(info, env, 0, 0)
+  ASSERT_ARG_ENUM(info, env, 0, 0, vr::TrackedControllerRole_Max,
+                  TrackedControllerRole)
+
+  const auto trackedControllerRole = static_cast<vr::ETrackedControllerRole>(
+      info[0].As<Napi::Number>().Uint32Value());
+
+  const auto result =
+      system->GetTrackedDeviceIndexForControllerRole(trackedControllerRole);
+
+  return cppToNode(env, result);
+}
+
+Napi::Value
+IVRSystem::GetStringTrackedDeviceProperty(const Napi::CallbackInfo &info) {
+  auto env = info.Env();
+
+  ASSERT_ARG_COUNT(info, env, 2, 2)
+  ASSERT_ARG_NUMBER(info, env, 0)
+  ASSERT_ARG_ENUM(info, env, 1, 0, vr::Prop_TrackedDeviceProperty_Max,
+                  TrackedDeviceProperty)
+
+  const auto deviceIndex = info[0].As<Napi::Number>().Uint32Value();
+  const auto prop = static_cast<vr::ETrackedDeviceProperty>(
+      info[0].As<Napi::Number>().Uint32Value());
+
+  vr::ETrackedPropertyError error;
+  char value[vr::k_unMaxPropertyStringSize];
+  const auto length = system->GetStringTrackedDeviceProperty(
+      deviceIndex, prop, value, sizeof(value), &error);
+
+  if (length == 0) {
+    const std::string code = system->GetPropErrorNameFromEnum(error);
+    Napi::Error::New(env, code + ": Failed to read property")
+        .ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  return Napi::String::New(env, value, length);
+}
+
+Napi::Value IVRSystem::GetControllerState(const Napi::CallbackInfo &info) {
+  auto env = info.Env();
+
+  ASSERT_ARG_COUNT(info, env, 1, 1)
+  ASSERT_ARG_NUMBER(info, env, 0)
+
+  const auto controllerDeviceIndex = info[0].As<Napi::Number>().Uint32Value();
+
+  vr::VRControllerState_t controllerState;
+  const auto result = system->GetControllerState(
+      controllerDeviceIndex, &controllerState, sizeof(controllerState));
+
+  if (!result)
+    return env.Undefined();
+
+  return cppToNode(env, controllerState);
 }
 
 Napi::Value
 IVRSystem::GetDeviceToAbsoluteTrackingPose(const Napi::CallbackInfo &info) {
   auto env = info.Env();
 
-  if (info.Length() != 2) {
-    Napi::TypeError::New(env, "Wrong number of arguments")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  ASSERT_ARG_COUNT(info, env, 2, 2)
+  ASSERT_ARG_ENUM(info, env, 0, 0, 3, TrackingUniverseOrigin)
+  ASSERT_ARG_NUMBER(info, env, 1)
 
-  if (!info[0].IsNumber()) {
-    Napi::TypeError::New(
-        env, "Argument[0] must be a number (TrackingUniverseOrigin)")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
-
-  const auto origin = info[0].As<Napi::Number>().Uint32Value();
-  if (origin < 0 || origin >= 3) {
-    Napi::TypeError::New(
-        env, "Argument[0] was out of enum range (TrackingUniverseOrigin).")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
-
-  if (!info[1].IsNumber()) {
-    Napi::TypeError::New(env, "Argument[1] must be a number")
-        .ThrowAsJavaScriptException();
-    return env.Undefined();
-  }
+  const auto origin = static_cast<vr::ETrackingUniverseOrigin>(
+      info[0].As<Napi::Number>().Uint32Value());
+  const auto predictedSecondsToPhotonsFromNow =
+      info[1].As<Napi::Number>().FloatValue();
 
   TrackedDevicePoseArray trackedDevicePoseArray;
   system->GetDeviceToAbsoluteTrackingPose(
-      static_cast<vr::ETrackingUniverseOrigin>(origin),
-      info[1].As<Napi::Number>().FloatValue(), trackedDevicePoseArray.data(),
+      origin, predictedSecondsToPhotonsFromNow, trackedDevicePoseArray.data(),
       static_cast<uint32_t>(trackedDevicePoseArray.size()));
 
-  return cppToNode(env, trackedDevicePoseArray);
+  const uint32_t size = trackedDevicePoseArray.size();
+  uint32_t validSize = 0;
+  for (uint32_t i = 0; i < size; i++) {
+    if (trackedDevicePoseArray[i].bPoseIsValid)
+      validSize = i + 1;
+  }
+  auto result = Napi::Array::New(env, validSize);
+  for (uint32_t i = 0; i < validSize; i++)
+    result.Set(i, cppToNode(env, trackedDevicePoseArray[i]));
+  return result;
 }

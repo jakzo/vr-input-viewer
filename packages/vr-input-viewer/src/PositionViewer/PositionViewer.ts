@@ -102,7 +102,8 @@ export class PositionViewer {
     const container = new THREE.Group();
     const gripSpace = new THREE.Group();
     gripSpace.add(this.controllerModelFactory.createControllerModel(gripSpace));
-    // gripSpace.position.z += 0.02;
+    // TODO: Figure out what's going on with this offset
+    gripSpace.position.z += 0.08;
     this.scene.add(container);
     return { gripSpace, container };
   }

@@ -1,7 +1,7 @@
-export type JsonPrimitive = null | boolean | number | string;
-export type Json = JsonPrimitive | Json[] | { [key: string]: Json };
-
-export type BridgeApi = Record<string, (...args: any[]) => Promise<any>>;
+export type BridgeApi = Record<
+  string,
+  (...args: unknown[]) => Promise<unknown>
+>;
 
 export const DEFAULT_CHANNEL = "tipc";
 

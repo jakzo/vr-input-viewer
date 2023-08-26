@@ -22,7 +22,8 @@ export class IsolatedSvg extends HTMLElement {
   }
 }
 
-customElements.define("isolated-svg", IsolatedSvg);
+if (!customElements.get("isolated-svg"))
+  customElements.define("isolated-svg", IsolatedSvg);
 
 export interface ControllerHudOpts {
   xrInputSource: VirtualXRInputSource;
@@ -106,10 +107,12 @@ export class ControllerHud {
     this.axisElements = opts.xrInputSource.gamepad.axes.map((_value, idx) => {
       const getAxisElements = (axis: string) =>
         [
-          ...this.container.querySelectorAll<HTMLElement>(`.axis${idx}${axis}`),
+          ...this.container.shadowRoot!.querySelectorAll<HTMLElement>(
+            `.axis${idx}${axis}`,
+          ),
         ].map((el) => ({
           isX: axis === "x",
-          factor: +el.getAttribute("factor")!,
+          factor: +el.dataset["factor"]!,
           el,
         }));
       return [...getAxisElements("x"), ...getAxisElements("y")];
@@ -155,7 +158,7 @@ export class ControllerHud {
         const translateMatch =
           el.style.transform.match(/translate\(([^)]+)\)/)?.[1];
         for (const [i, n] of translateMatch?.split(",").entries() ?? []) {
-          const match = n.match(/\d+/)?.[0];
+          const match = n.match(/-?\d+/)?.[0];
           if (!match) continue;
           translated[i] = +match;
         }

@@ -15,17 +15,17 @@ export const vrFfiBridge = declareBridgeApi({
   async openvrGetInputs() {
     if (!ivrSystem) throw new Error("openvrInit() must be called first");
 
-    const indexesHmd = ivrSystem.GetSortedTrackedDeviceIndicesOfClass(
+    const indexHmd = ivrSystem.GetSortedTrackedDeviceIndicesOfClass(
       OpenVR.TrackedDeviceClass.HMD,
-    );
-    const indexHmd = indexesHmd[0];
-
-    const indexesController = ivrSystem.GetSortedTrackedDeviceIndicesOfClass(
-      OpenVR.TrackedDeviceClass.Controller,
-    );
-    // TODO: Use ivrSystem.GetControllerRoleForTrackedDeviceIndex() for hand
-    const indexControllerLeft = indexesController.find((index) => index === 1);
-    const indexControllerRight = indexesController.find((index) => index === 2);
+    )[0];
+    const indexControllerLeft =
+      ivrSystem.GetTrackedDeviceIndexForControllerRole(
+        OpenVR.TrackedControllerRole.LeftHand,
+      );
+    const indexControllerRight =
+      ivrSystem.GetTrackedDeviceIndexForControllerRole(
+        OpenVR.TrackedControllerRole.RightHand,
+      );
 
     const poses = ivrSystem.GetDeviceToAbsoluteTrackingPose(
       OpenVR.TrackingUniverseOrigin.Standing,
@@ -33,13 +33,24 @@ export const vrFfiBridge = declareBridgeApi({
     );
 
     return {
-      hmd: (indexHmd !== undefined && poses[indexHmd]) || null,
+      hmd:
+        indexHmd !== undefined
+          ? { pose: poses[indexHmd], state: undefined }
+          : undefined,
       left:
-        (indexControllerLeft !== undefined && poses[indexControllerLeft]) ||
-        null,
+        indexControllerLeft !== undefined
+          ? {
+              pose: poses[indexControllerLeft],
+              state: ivrSystem.GetControllerState(indexControllerLeft),
+            }
+          : undefined,
       right:
-        (indexControllerRight !== undefined && poses[indexControllerRight]) ||
-        null,
+        indexControllerRight !== undefined
+          ? {
+              pose: poses[indexControllerRight],
+              state: ivrSystem.GetControllerState(indexControllerRight),
+            }
+          : undefined,
     };
   },
   async openvrShutdown() {

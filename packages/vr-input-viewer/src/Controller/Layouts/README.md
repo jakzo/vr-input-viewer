@@ -14,7 +14,7 @@
      - The element that moves as part of the axis (eg. the thumbstick) should have the class `axis0x` where `0` is the axis index and `x` is the direction
      - If an element moves in both X and Y directions both `axis0x` and `axis1y` classes should be added to the element
      - Note that the axis index is different for X and Y
-     - The bounds that the axis can move in are defined by the `factor` attribute
+     - The bounds that the axis can move in are defined by the `data-factor` attribute
        - The `factor` is the number the axis value is multiplied by to determine the amount to move the element along its axis relative to its starting position
        - Typically axis values go from -1 to 1 (eg. a factor of 5 will move the element from -5 to 5)
 1. Put the SVG file in this directory and name it `Name.svg` where `Name` is the name of the layout

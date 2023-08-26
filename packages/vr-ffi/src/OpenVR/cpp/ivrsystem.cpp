@@ -20,6 +20,11 @@ void IVRSystem::Initialize(Napi::Env &env, const Napi::Object &exports) {
       {
           InstanceMethod("GetSortedTrackedDeviceIndicesOfClass",
                          &IVRSystem::GetSortedTrackedDeviceIndicesOfClass),
+          InstanceMethod("GetTrackedDeviceIndexForControllerRole",
+                         &IVRSystem::GetTrackedDeviceIndexForControllerRole),
+          InstanceMethod("GetStringTrackedDeviceProperty",
+                         &IVRSystem::GetStringTrackedDeviceProperty),
+          InstanceMethod("GetControllerState", &IVRSystem::GetControllerState),
           InstanceMethod("GetDeviceToAbsoluteTrackingPose",
                          &IVRSystem::GetDeviceToAbsoluteTrackingPose),
       });
@@ -76,7 +81,7 @@ Napi::Value IVRSystem::GetTrackedDeviceIndexForControllerRole(
     const Napi::CallbackInfo &info) {
   auto env = info.Env();
 
-  ASSERT_ARG_COUNT(info, env, 0, 0)
+  ASSERT_ARG_COUNT(info, env, 1, 1)
   ASSERT_ARG_ENUM(info, env, 0, 0, vr::TrackedControllerRole_Max,
                   TrackedControllerRole)
 
@@ -100,7 +105,7 @@ IVRSystem::GetStringTrackedDeviceProperty(const Napi::CallbackInfo &info) {
 
   const auto deviceIndex = info[0].As<Napi::Number>().Uint32Value();
   const auto prop = static_cast<vr::ETrackedDeviceProperty>(
-      info[0].As<Napi::Number>().Uint32Value());
+      info[1].As<Napi::Number>().Uint32Value());
 
   vr::ETrackedPropertyError error;
   char value[vr::k_unMaxPropertyStringSize];
@@ -109,12 +114,14 @@ IVRSystem::GetStringTrackedDeviceProperty(const Napi::CallbackInfo &info) {
 
   if (length == 0) {
     const std::string code = system->GetPropErrorNameFromEnum(error);
-    Napi::Error::New(env, code + ": Failed to read property")
-        .ThrowAsJavaScriptException();
+    auto error =
+        Napi::Error::New(env, "Failed to read property (" + code + ")");
+    error.Set("code", Napi::String::New(env, code));
+    error.ThrowAsJavaScriptException();
     return env.Undefined();
   }
 
-  return Napi::String::New(env, value, length);
+  return Napi::String::New(env, value, length - 1);
 }
 
 Napi::Value IVRSystem::GetControllerState(const Napi::CallbackInfo &info) {

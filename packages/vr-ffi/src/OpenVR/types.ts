@@ -1,3 +1,5 @@
+export * from "./TrackedDeviceProperty";
+
 /** Please add adequate error description to https://developer.valvesoftware.com/w/index.php?title=Category:SteamVRHelp */
 export enum VRInitError {
   None = 0,
@@ -179,19 +181,19 @@ export type HmdMatrix34 = [
 
 /** describes a single pose for a tracked object */
 export interface TrackedDevicePose {
-  mDeviceToAbsoluteTracking: HmdMatrix34;
+  deviceToAbsoluteTracking: HmdMatrix34;
   /** velocity in tracker space in m/s */
-  vVelocity: HmdVector3;
+  velocity: HmdVector3;
   /** angular velocity in radians/s (?) */
-  vAngularVelocity: HmdVector3;
-  eTrackingResult: TrackingResult;
-  bPoseIsValid: boolean;
+  angularVelocity: HmdVector3;
+  trackingResult: TrackingResult;
+  poseIsValid: boolean;
 
   /**
    * This indicates that there is a device connected for this spot in the pose array.
    * It could go from true to false if the user unplugs the device.
    */
-  bDeviceIsConnected: boolean;
+  deviceIsConnected: boolean;
 }
 
 export interface VRControllerState {
@@ -202,9 +204,9 @@ export interface VRControllerState {
   packetNum: number;
 
   /** bit flags for each of the buttons. Use ButtonMaskFromId to turn an ID into a mask */
-  buttonPressed: number;
+  buttonPressed: bigint;
   /** bit flags for each of the buttons. Use ButtonMaskFromId to turn an ID into a mask */
-  buttonTouched: number;
+  buttonTouched: bigint;
 
   /** Axis data for the controller's analog inputs */
   axis: VRControllerAxis[];
@@ -244,7 +246,7 @@ export enum TrackedDeviceIndex {
 
 /** Each entry in this enum represents a property that can be retrieved about a
  * tracked device. Many fields are only valid for one TrackedDeviceClass. */
-export enum TrackedDeviceProperty {
+export enum TrackedDeviceProperty_All {
   Invalid = 0,
 
   // general properties that apply to all device classes

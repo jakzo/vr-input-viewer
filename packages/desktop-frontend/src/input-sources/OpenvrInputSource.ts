@@ -9,6 +9,8 @@ import type { Handedness, Transform } from "@jakzo/vr-input-viewer";
 
 const tempMatrix = new THREE.Matrix4();
 
+const BUTTON_MAPPINGS: bigint[] = [33n, 2n, 32n, 0n, 7n, 1n];
+
 export interface OpenvrInputSourceOpts {}
 
 export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
@@ -96,8 +98,8 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
     } else if (wasHeadsetConnected && !isHeadsetConnected) {
       this.inputViewer.disconnectHeadset();
     }
-    if (inputs.hmd)
-      this.setTransform(inputs.hmd, this.inputViewer.transforms.hmd);
+    if (inputs.hmd?.pose)
+      this.setTransform(inputs.hmd.pose, this.inputViewer.transforms.hmd);
 
     for (const handedness of ["left", "right"] as const) {
       const controller = inputs[handedness];
@@ -110,12 +112,32 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
       } else if (wasConnected && !isConnected) {
         this.inputViewer.disconnectController(handedness);
       }
-      if (controller)
-        this.setTransform(controller, this.inputViewer.transforms[handedness]);
+      if (controller?.pose)
+        this.setTransform(
+          controller.pose,
+          this.inputViewer.transforms[handedness],
+        );
+      if (controller?.state) {
+        const gamepad = this.inputViewer.controllers[handedness]?.gamepad;
+        if (gamepad) {
+          for (const [buttonIdx, i] of BUTTON_MAPPINGS.entries()) {
+            const button = gamepad.buttons[buttonIdx];
+            if (!button) continue;
+            const bit = 1n << i;
+            button.touched = (controller.state.buttonTouched & bit) !== 0n;
+            button.pressed = (controller.state.buttonPressed & bit) !== 0n;
+            button.value = button.pressed ? 1 : 0;
+          }
+          gamepad.axes[2] = controller.state.axis[0]!.x;
+          gamepad.axes[3] = -controller.state.axis[0]!.y;
+          gamepad.buttons[0]!.value = controller.state.axis[1]!.x;
+          gamepad.buttons[1]!.value = controller.state.axis[2]!.x;
+        }
+      }
     }
   }
 
-  setTransform(pose: OpenVR.TrackedDevicePose_t, transform: Transform) {
+  setTransform(pose: OpenVR.TrackedDevicePose, transform: Transform) {
     const m = pose.deviceToAbsoluteTracking;
     tempMatrix.set(
       m[0][0],

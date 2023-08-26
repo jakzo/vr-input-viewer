@@ -9,9 +9,9 @@
     VrInputSourceConfigOpt,
   } from "../input-sources/VrInputSource.js";
 
-  export let inputSources: VrInputSource[];
+  export let inputSources: VrInputSource<unknown>[];
   export let inputSourceAvailability: (boolean | undefined)[];
-  const getOptEntries = (inputSource: VrInputSource) =>
+  const getOptEntries = (inputSource: VrInputSource<unknown>) =>
     Object.entries(
       inputSource.type.config.opts as Record<string, VrInputSourceConfigOpt>
     );
@@ -40,7 +40,7 @@
     };
   };
 
-  let isOpen = true;
+  let isOpen = false;
   const openMenu = () => {
     isOpen = true;
   };

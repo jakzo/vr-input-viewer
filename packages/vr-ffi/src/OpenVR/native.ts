@@ -3,7 +3,7 @@ import {
   TrackedDeviceClass,
   TrackedDeviceIndex,
   TrackedDevicePose,
-  TrackedDeviceProperty,
+  TrackedDeviceProperty_String,
   TrackingUniverseOrigin,
   VRApplicationType,
   VRControllerState,
@@ -31,7 +31,7 @@ declare class IVRSystem {
    * throw. */
   GetStringTrackedDeviceProperty(
     deciveIndex: number,
-    prop: TrackedDeviceProperty,
+    prop: TrackedDeviceProperty_String,
   ): string;
 
   /**

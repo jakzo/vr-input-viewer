@@ -1,17 +1,7 @@
 import { ipcMain } from "electron";
-import { BridgeApi, Json, DEFAULT_CHANNEL } from "./utils";
+import { BridgeApi, DEFAULT_CHANNEL } from "./utils";
 
-export const declareBridgeApi = <Api extends BridgeApi>(
-  api: Api & {
-    [K in keyof Api]: (
-      ...args: Parameters<Api[K]> extends infer Args extends unknown[]
-        ? { [I in keyof Args]: Args[I] extends Json ? Args[I] : Json }
-        : never
-    ) => ReturnType<Api[K]> extends Promise<Json | void>
-      ? ReturnType<Api[K]>
-      : Json;
-  },
-): Api => api;
+export const declareBridgeApi = <Api extends BridgeApi>(api: Api): Api => api;
 
 export const mainListenBridge = <Api extends BridgeApi>(
   api: Api,

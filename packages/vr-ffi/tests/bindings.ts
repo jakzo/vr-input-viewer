@@ -40,9 +40,12 @@ assert(
 const rightControllerIndex = system.GetTrackedDeviceIndexForControllerRole(
   OpenVR.TrackedControllerRole.RightHand,
 );
-console.log({ rightControllerIndex });
+const leftControllerIndex = system.GetTrackedDeviceIndexForControllerRole(
+  OpenVR.TrackedControllerRole.LeftHand,
+);
+console.log({ leftControllerIndex, rightControllerIndex });
 assert(
-  typeof rightControllerIndex !== "number",
+  typeof rightControllerIndex === "number",
   "GetTrackedDeviceIndexForControllerRole() did not return a number",
 );
 assert(
@@ -52,7 +55,7 @@ assert(
 
 const manufacturer = system.GetStringTrackedDeviceProperty(
   hmdIndices[0]!,
-  OpenVR.TrackedDeviceProperty.ManufacturerName_String,
+  OpenVR.TrackedDeviceProperty_String.ManufacturerName,
 );
 console.log({ manufacturer });
 assert(

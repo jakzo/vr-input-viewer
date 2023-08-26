@@ -62,14 +62,14 @@
   <g class="thumbstick">
     <circle class="background"></circle>
 
-    <circle class="button2 axis2x axis3y stick" factor="13"></circle>
+    <circle class="button2 axis2x axis3y stick" data-factor="13"></circle>
     <circle
       class="button2-touched touched axis2x axis3y stick"
-      factor="13"
+      data-factor="13"
     ></circle>
     <circle
       class="button2-pressed pressed axis2x axis3y stick"
-      factor="13"
+      data-factor="13"
     ></circle>
   </g>
 

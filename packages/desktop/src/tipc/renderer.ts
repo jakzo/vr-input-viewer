@@ -1,4 +1,4 @@
-import { BridgeApi, DEFAULT_CHANNEL, Json, exposedVarName } from "./utils";
+import { BridgeApi, DEFAULT_CHANNEL, exposedVarName } from "./utils";
 
 export const rendererCreateBridge = <Api extends BridgeApi>(
   channel = DEFAULT_CHANNEL,
@@ -7,7 +7,7 @@ export const rendererCreateBridge = <Api extends BridgeApi>(
     get: (target, key: string) =>
       target[key] ??
       Object.assign(target, {
-        [key]: (...args: Json[]) =>
+        [key]: (...args: unknown[]) =>
           window[exposedVarName(channel) as keyof Window](key, args),
       })[key],
   });

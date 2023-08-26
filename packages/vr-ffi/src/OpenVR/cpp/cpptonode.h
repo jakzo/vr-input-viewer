@@ -35,11 +35,12 @@ Napi::Value cppToNode(const Napi::Env &env, const vr::ETrackingResult &value) {
 template <> Napi::Value cppToNode(const Napi::Env &env, const uint32_t &value) {
   return Napi::Number::New(env, value);
 }
-template <> Napi::Value cppToNode(const Napi::Env &env, const uint64_t &value) {
-  return Napi::Number::New(env, value);
-}
 template <> Napi::Value cppToNode(const Napi::Env &env, const float &value) {
   return Napi::Number::New(env, value);
+}
+
+template <> Napi::Value cppToNode(const Napi::Env &env, const uint64_t &value) {
+  return Napi::BigInt::New(env, value);
 }
 
 template <>

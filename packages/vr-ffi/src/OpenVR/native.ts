@@ -7,7 +7,7 @@ import {
   TrackingUniverseOrigin,
   VRApplicationType,
   VRControllerState,
-} from "./types";
+} from "./typescript";
 
 declare class IVRSystem {
   /**
@@ -66,7 +66,7 @@ declare class IVRSystem {
   ): VRControllerState | undefined;
 }
 
-interface OpenvrNative {
+export interface OpenvrNative {
   IVRSystem: typeof IVRSystem;
 
   /** Finds the active installation of vrclient.dll and initializes it */
@@ -87,5 +87,3 @@ interface OpenvrNative {
   /** Returns true if the OpenVR runtime is installed. */
   IsRuntimeInstalled(): boolean;
 }
-
-export const native = require("../../build/Release/openvr") as OpenvrNative;

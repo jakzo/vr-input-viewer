@@ -1,5 +1,5 @@
-export * from "./types";
+export * from "./typescript";
 
-import { native } from "./native";
+import { OpenvrNative } from "./native";
 export const { Init, Shutdown, IsHmdPresent, IsRuntimeInstalled, IVRSystem } =
-  native;
+  require("../../build/Release/openvr.node") as OpenvrNative;

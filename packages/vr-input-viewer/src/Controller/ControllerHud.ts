@@ -150,24 +150,27 @@ export class ControllerHud {
       }
     }
 
+    const elementTranslations = new Map<HTMLElement, [number, number]>();
+    const getElementTranslation = (element: HTMLElement): [number, number] => {
+      const existing = elementTranslations.get(element);
+      if (existing) return existing;
+      const translation: [number, number] = [0, 0];
+      elementTranslations.set(element, translation);
+      return translation;
+    };
     for (const [idx, axis] of this.opts.xrInputSource.gamepad.axes.entries()) {
       const axisEls = this.axisElements[idx];
       if (!axisEls) continue;
       for (const { isX, factor, el } of axisEls) {
-        const translated: [number, number] = [0, 0];
-        const translateMatch =
-          el.style.transform.match(/translate\(([^)]+)\)/)?.[1];
-        for (const [i, n] of translateMatch?.split(",").entries() ?? []) {
-          const match = n.match(/-?\d+/)?.[0];
-          if (!match) continue;
-          translated[i] = +match;
-        }
+        const translated = getElementTranslation(el);
         translated[isX ? 0 : 1] =
-          axis * (this.isMirrored && isX ? -factor : factor);
-        el.style.transform = `translate(${translated
-          .map((n) => `${n}px`)
-          .join(", ")})`;
+          axis * (this.isMirrored && isX ? -factor : factor) * (isX ? 1 : -1);
       }
+    }
+    for (const [el, translated] of elementTranslations) {
+      el.style.transform = `translate(${translated
+        .map((n) => `${n}px`)
+        .join(", ")})`;
     }
   };
 }

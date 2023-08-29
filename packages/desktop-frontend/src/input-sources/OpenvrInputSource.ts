@@ -4,12 +4,19 @@ import {
   VrInputSourceArgs,
   type VrInputSourceConfig,
 } from "@jakzo/vr-input-viewer-frontend";
-import { OpenVR } from "@jakzo/vr-ffi";
+import * as OpenVR from "@jakzo/vr-ffi/dist/OpenVR/typescript.js";
 import type { Handedness, Transform } from "@jakzo/vr-input-viewer";
 
 const tempMatrix = new THREE.Matrix4();
 
-const BUTTON_MAPPINGS: bigint[] = [33n, 2n, 32n, 0n, 7n, 1n];
+const BUTTON_MAPPINGS = [
+  OpenVR.VRButtonId.SteamVR_Trigger, // Trigger
+  OpenVR.VRButtonId.Grip, // Grip
+  OpenVR.VRButtonId.Max, // Touchpad
+  OpenVR.VRButtonId.SteamVR_Touchpad, // Thumbstick
+  OpenVR.VRButtonId.A, // A
+  OpenVR.VRButtonId.ApplicationMenu, // B
+].map(BigInt);
 
 export interface OpenvrInputSourceOpts {}
 
@@ -128,10 +135,15 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
             button.pressed = (controller.state.buttonPressed & bit) !== 0n;
             button.value = button.pressed ? 1 : 0;
           }
-          gamepad.axes[2] = controller.state.axis[0]!.x;
-          gamepad.axes[3] = -controller.state.axis[0]!.y;
-          gamepad.buttons[0]!.value = controller.state.axis[1]!.x;
-          gamepad.buttons[1]!.value = controller.state.axis[2]!.x;
+
+          gamepad.axes[2] =
+            controller.state.axis[OpenVR.VRControllerAxisType.None]!.x; // ThumbstickX
+          gamepad.axes[3] =
+            controller.state.axis[OpenVR.VRControllerAxisType.None]!.y; // ThumbstickY
+          gamepad.buttons[0]!.value =
+            controller.state.axis[OpenVR.VRControllerAxisType.TrackPad]!.x; // Trigger
+          gamepad.buttons[1]!.value =
+            controller.state.axis[OpenVR.VRControllerAxisType.Joystick]!.x; // Grip
         }
       }
     }

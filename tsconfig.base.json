@@ -17,6 +17,7 @@
     "rootDir": ".",
     "paths": {
       "@jakzo/vr-ffi": ["./packages/vr-ffi/src/index.ts"],
+      "@jakzo/vr-ffi/dist/*": ["./packages/vr-ffi/src/*"],
       "@jakzo/vr-input-viewer": ["./packages/vr-input-viewer/src/index.ts"]
     }
   }

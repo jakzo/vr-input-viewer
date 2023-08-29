@@ -1,53 +1,53 @@
 <svg viewBox="0 0 100 100">
   <style>
     * {
-      stroke-width: 3;
-      stroke-linejoin: round;
-      stroke: gray;
-      fill: white;
+    stroke-width: 3;
+    stroke-linejoin: round;
+    stroke: gray;
+    fill: white;
     }
 
     .left {
-      left: 0;
+    left: 0;
     }
     .right {
-      right: 0;
-      transform: scale(-1, 1);
+    right: 0;
+    transform: scale(-1, 1);
     }
     .button {
-      r: 10;
+    r: 10;
     }
     .button.a {
-      cx: 23;
-      cy: 82;
+    cx: 23;
+    cy: 82;
     }
     .button.b {
-      cx: 45;
-      cy: 66;
+    cx: 45;
+    cy: 66;
     }
     .thumbstick .background {
-      stroke-width: 0;
-      fill: #333;
-      r: 25;
-      cx: 30;
-      cy: 28;
+    stroke-width: 0;
+    fill: #333;
+    r: 25;
+    cx: 30;
+    cy: 28;
     }
     .thumbstick .stick {
-      r: 10;
-      cx: 30;
-      cy: 28;
+    r: 10;
+    cx: 30;
+    cy: 28;
     }
     .trigger.primary {
-      transform: translate(60px, 10px) rotate(-5deg);
+    transform: translate(60px, 10px) rotate(-5deg);
     }
     .trigger.secondary {
-      transform: translate(63px, 56px);
+    transform: translate(63px, 56px);
     }
     .touched {
-      fill: #edbedd;
+    fill: #edbedd;
     }
     .pressed {
-      fill: darkmagenta;
+    fill: darkmagenta;
     }
   </style>
 
@@ -62,13 +62,13 @@
   <g class="thumbstick">
     <circle class="background"></circle>
 
-    <circle class="button2 axis2x axis3y stick" data-factor="13"></circle>
+    <circle class="button3 axis2x axis3y stick" data-factor="13"></circle>
     <circle
-      class="button2-touched touched axis2x axis3y stick"
+      class="button3-touched touched axis2x axis3y stick"
       data-factor="13"
     ></circle>
     <circle
-      class="button2-pressed pressed axis2x axis3y stick"
+      class="button3-pressed pressed axis2x axis3y stick"
       data-factor="13"
     ></circle>
   </g>

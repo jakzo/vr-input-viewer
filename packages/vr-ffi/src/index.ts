@@ -1,3 +1,1 @@
-import * as OpenVR from "./OpenVR";
-
-export { OpenVR };
+export * as OpenVR from "./OpenVR";

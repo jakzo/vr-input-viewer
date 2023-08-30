@@ -28,10 +28,7 @@
                 [
                     'OS == "linux"',
                     {
-                        "library_dirs": [
-                            "<(module_root_dir)/deps/openvr/lib/linux64",
-                            "<(module_root_dir)/deps/openvr/bin/linux64",
-                        ],
+                        "library_dirs": ["<(module_root_dir)/deps/openvr/lib/linux64"],
                         "libraries": ["libopenvr_api.so"],
                         "copies": [
                             {

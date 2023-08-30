@@ -2,7 +2,10 @@
 const config = {
   packagerConfig: {
     asar: true,
-    extraResource: [],
+    name: "VrInputViewer",
+    ...(process.env["APP_VERSION"]
+      ? { appVersion: process.env["APP_VERSION"] }
+      : {}),
   },
   rebuildConfig: {},
   makers: [

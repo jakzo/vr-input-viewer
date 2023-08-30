@@ -29,6 +29,7 @@ c_cpp_properties.json
 dist/
 build/
 out/
+.vite/
 
 # Dotenv environment variables file
 .env

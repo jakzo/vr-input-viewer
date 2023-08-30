@@ -49,6 +49,7 @@
     top: 0;
     left: 72px;
     right: 72px;
+    pointer-events: none;
   }
 
   .notification {

@@ -19,7 +19,6 @@
     "electron-squirrel-startup": "^1.0.0"
   },
   "devDependencies": {
-    "@electron/rebuild": "^3.3.0",
     "@electron-forge/cli": "^6.3.0",
     "@electron-forge/maker-deb": "^6.3.0",
     "@electron-forge/maker-rpm": "^6.3.0",
@@ -27,7 +26,9 @@
     "@electron-forge/maker-zip": "^6.3.0",
     "@electron-forge/plugin-auto-unpack-natives": "^6.3.0",
     "@electron-forge/plugin-vite": "^6.3.0",
+    "@electron/rebuild": "^3.3.0",
     "@jakzo/vr-input-viewer-config": "^0.0.0",
+    "@types/electron-squirrel-startup": "^1.0.0",
     "electron": "26.0.0",
     "prettier": "^3.0.1",
     "vite": "^4.4.9"

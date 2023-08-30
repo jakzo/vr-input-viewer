@@ -19,5 +19,6 @@ export interface VrFfiBridge {
 declare global {
   interface Window {
     vrFfiBridge: VrFfiBridge;
+    platform: { getPlatform: () => NodeJS.Platform };
   }
 }

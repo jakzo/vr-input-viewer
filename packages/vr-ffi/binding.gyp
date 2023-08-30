@@ -9,14 +9,15 @@
     "targets": [
         {
             "target_name": "openvr",
-            "cflags!": [ "-fno-exceptions" ],
-            "cflags_cc!": [ "-fno-exceptions" ],
-            "xcode_settings": { "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+            "cflags!": ["-fno-exceptions"],
+            "cflags_cc!": ["-fno-exceptions"],
+            "xcode_settings": {
+                "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
                 "CLANG_CXX_LIBRARY": "libc++",
                 "MACOSX_DEPLOYMENT_TARGET": "10.7",
             },
             "msvs_settings": {
-                "VCCLCompilerTool": { "ExceptionHandling": 1 },
+                "VCCLCompilerTool": {"ExceptionHandling": 1},
             },
             "sources": ["src/OpenVR/cpp/openvr.cpp", "src/OpenVR/cpp/ivrsystem.cpp"],
             "include_dirs": [
@@ -28,9 +29,7 @@
                     'OS=="linux"',
                     {
                         "library_dirs": ["<(module_root_dir)/deps/openvr/lib/linux64"],
-                        "libraries": [
-                            "<(module_root_dir)/deps/openvr/lib/linux64/libopenvr_api.so"
-                        ],
+                        "libraries": ["libopenvr_api.so"],
                         "copies": [
                             {
                                 "destination": "<(module_root_dir)/build/Release",

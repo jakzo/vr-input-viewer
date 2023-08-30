@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
       # - name: Set up toolchain
       #   run: sudo apt install -y flatbuffers-compiler=2.0.6
       - uses: actions/setup-node@v3

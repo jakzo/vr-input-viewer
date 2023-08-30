@@ -26,7 +26,7 @@
             ],
             "conditions": [
                 [
-                    'OS=="linux"',
+                    'OS == "linux"',
                     {
                         "library_dirs": ["<(module_root_dir)/deps/openvr/lib/linux64"],
                         "libraries": ["libopenvr_api.so"],
@@ -41,7 +41,7 @@
                     },
                 ],
                 [
-                    'OS=="mac"',
+                    'OS == "mac"',
                     {
                         "library_dirs": ["<(module_root_dir)/deps/openvr/lib/osx32"],
                         "libraries": ["libopenvr_api.dylib"],
@@ -56,7 +56,7 @@
                     },
                 ],
                 [
-                    'OS=="win"',
+                    'OS == "win"',
                     {
                         "library_dirs": ["<(module_root_dir)/deps/openvr/lib/win64"],
                         "libraries": ["openvr_api.lib"],

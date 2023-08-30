@@ -13,9 +13,7 @@
   "gypfile": true,
   "scripts": {
     "rebuild-and-test": "npm rebuild && npm run test",
-    "test": "tsx ./tests/bindings.ts",
-    "build": "tsc",
-    "serial": "tsx ./serial.mts"
+    "test": "tsx ./tests/bindings.ts"
   },
   "dependencies": {
     "node-addon-api": "7.0.0"

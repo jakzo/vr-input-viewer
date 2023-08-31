@@ -35,7 +35,7 @@ jobs:
         with:
           target_commitish: ${{ github.sha }}
           prerelease: true
-          tag: release_${{ github.run_number }}
+          tag_name: release_${{ github.run_number }}
           body: >
             This is still in beta. Expect some things to not work correctly.
           files: ./packages/desktop/out/make/zip/**/*.zip

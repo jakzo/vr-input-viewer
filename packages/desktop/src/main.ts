@@ -1,12 +1,12 @@
 import { app, BrowserWindow } from "electron";
-import { default as electronSquirrelStartup } from "electron-squirrel-startup";
+import isElectronSquirrelStartup from "electron-squirrel-startup";
 import path from "path";
 
 import { mainListenBridge } from "./tipc/main";
 import { vrFfiBridge } from "./vr-ffi-bridge";
 import { isDev } from "./env";
 
-if (electronSquirrelStartup) {
+if (isElectronSquirrelStartup) {
   app.quit();
 } else {
   const createWindow = () => {

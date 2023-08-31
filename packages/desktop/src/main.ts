@@ -1,11 +1,11 @@
 import { app, BrowserWindow } from "electron";
+import { default as electronSquirrelStartup } from "electron-squirrel-startup";
 import path from "path";
 
 import { mainListenBridge } from "./tipc/main";
 import { vrFfiBridge } from "./vr-ffi-bridge";
 import { isDev } from "./env";
 
-import { default as electronSquirrelStartup } from "electron-squirrel-startup";
 if (electronSquirrelStartup) {
   app.quit();
 } else {
@@ -13,6 +13,9 @@ if (electronSquirrelStartup) {
     const win = new BrowserWindow({
       width: isDev ? 1600 : 600,
       height: isDev ? 900 : 600,
+      autoHideMenuBar: true,
+      transparent: true,
+      frame: false,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },

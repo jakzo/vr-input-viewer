@@ -1,11 +1,18 @@
 const path = require("path");
 
+/** @type Partial<Record<NodeJS.Platform, string>> */
+const iconFilenames = { win32: "icon.ico", darwin: "icon.icns" };
+
 /** @type import("@electron-forge/shared-types").ForgeConfig */
 const config = {
   packagerConfig: {
-    asar: true,
     name: "VrInputViewer",
-    icon: path.join(__dirname, "assets", "icon.png"),
+    icon: path.join(
+      __dirname,
+      "assets",
+      iconFilenames[process.platform] ?? "icon.png",
+    ),
+    asar: { unpack: "*.{node,dll}" },
     ...(process.env["APP_VERSION"]
       ? { appVersion: process.env["APP_VERSION"] }
       : {}),
@@ -14,14 +21,14 @@ const config = {
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
-      config: {},
+      config: {
+        name: "VrInputViewer",
+      },
     },
     {
       name: "@electron-forge/maker-zip",
-      platforms: ["darwin"],
-      config: {
-        icon: path.join(__dirname, "assets", "icon.icns"),
-      },
+      platforms: ["win32", "darwin"],
+      config: {},
     },
     {
       name: "@electron-forge/maker-deb",

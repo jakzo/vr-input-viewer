@@ -1,10 +1,12 @@
-> **🚧 Under construction, not everything works yet. 🚧**
+> **🚧 Still in BETA. Expect bugs. 🚧**
 
 Visualization of VR controller and headset inputs and positions. Useful for streams and recordings.
 
+Currently works with SteamVR.
+
 ## ➡️ Quick links
 
-- [Download VR Input Viewer](#TODO)
+- [Download VR Input Viewer](https://github.com/jakzo/vr-input-viewer/releases/latest)
 - [VR Input Viewer web version](#TODO) (for viewing inputs from another machine/device)
 - [How to add new headsets and controller layouts](#🎮-how-to-add-new-headsets-and-controller-layouts)
 

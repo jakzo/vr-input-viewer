@@ -43,8 +43,9 @@ void main() {
   float distToCenter = distance(worldUv, vec2(0.5));
   float fadeRaw = distToCenter / (fadeSize / max(size.x, size.y));
   float fade = clamp(fadeRaw, 0.0, 1.0);
+  float alpha = min(lines, 1.0 - fade);
 
-  gl_FragColor = vec4(color * lines, 1.0 - fade);
+  gl_FragColor = vec4(color * lines, alpha);
 }
 `;
 

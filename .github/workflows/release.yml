@@ -38,4 +38,4 @@ jobs:
           tag: release_${{ github.run_number }}
           body: >
             This is still in beta. Expect some things to not work correctly.
-          files: ./packages/desktop/out/**/*.{exe,app,deb,rpm}
+          files: ./packages/desktop/out/make/zip/**/*.zip

@@ -1,8 +1,11 @@
+const path = require("path");
+
 /** @type import("@electron-forge/shared-types").ForgeConfig */
 const config = {
   packagerConfig: {
     asar: true,
     name: "VrInputViewer",
+    icon: path.join(__dirname, "assets", "icon.png"),
     ...(process.env["APP_VERSION"]
       ? { appVersion: process.env["APP_VERSION"] }
       : {}),
@@ -16,7 +19,9 @@ const config = {
     {
       name: "@electron-forge/maker-zip",
       platforms: ["darwin"],
-      config: {},
+      config: {
+        icon: path.join(__dirname, "assets", "icon.icns"),
+      },
     },
     {
       name: "@electron-forge/maker-deb",

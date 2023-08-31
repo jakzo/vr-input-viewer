@@ -13,6 +13,8 @@ jobs:
     name: Release (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     environment: Release
+    permissions:
+      contents: write
     env:
       APP_VERSION: 0.0.${{ github.run_number }}
     steps:

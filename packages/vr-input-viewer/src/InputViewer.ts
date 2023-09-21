@@ -34,6 +34,8 @@ export interface InputViewerOpts {
   controllerLayout?: string | undefined;
   /** Force it to show a specific headset model. */
   overrideHeadsetName?: string | undefined;
+  /** Use this value for the player height indicator instead of calculating. */
+  playerHeight?: number | undefined;
 }
 
 export class InputViewer {

@@ -162,6 +162,25 @@
           {/each}
         </select>
 
+        <label for="player-height">Player height:</label>
+        <div class="text-input">
+          <input
+            id="player-height"
+            type="number"
+            value={settings.playerHeight}
+            on:change={(evt) => {
+              const value = +evt.currentTarget.value;
+              changeSetting("playerHeight", isNaN(value) ? undefined : value);
+            }}
+            placeholder="(auto-calculate)"
+            aria-describedby="player-height-tip"
+          />
+          <span class="tip" id="player-height-tip">
+            Player height in centimeters. Leave empty to continuously calculate
+            based on median of the headset height over the past minute.
+          </span>
+        </div>
+
         <label for="hide-hud">Hide controller inputs:</label>
         <div>
           <input

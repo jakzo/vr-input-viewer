@@ -18,6 +18,7 @@ export interface PositionViewerOpts {
   assetsBaseUrl?: string | undefined;
   webxrInputProfilesBaseUrl?: string | undefined;
   headsetName?: string | undefined;
+  playerHeight?: number | undefined;
 }
 
 export class PositionViewer {
@@ -88,7 +89,11 @@ export class PositionViewer {
 
     this.scene.add(this.grid.plane);
 
-    this.heightTrackers = new HeightTrackers(opts.transforms, 60);
+    this.heightTrackers = new HeightTrackers(
+      opts.transforms,
+      60,
+      opts.playerHeight,
+    );
     this.scene.add(this.heightTrackers.container);
 
     this.orbit = new OrbitControls(this.camera, this.renderer.domElement);

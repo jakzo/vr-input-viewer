@@ -11,6 +11,7 @@ export class HeightTrackers {
   constructor(
     public transforms: Transforms,
     public medianHeightWindow: number,
+    public playerHeight?: number | undefined,
   ) {
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,
@@ -56,7 +57,7 @@ export class HeightTrackers {
     this.heightLog.push([now, hmdPos.y]);
     this.heightMarker.position.set(
       hmdPos.x,
-      this.heightLog.median()?.[1] ?? 0,
+      this.playerHeight ?? this.heightLog.median()?.[1] ?? 0,
       hmdPos.z,
     );
   }

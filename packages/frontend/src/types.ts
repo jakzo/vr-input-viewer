@@ -7,6 +7,7 @@ export interface Settings
   > {
   inputSource: string;
   inputSourceOpts: Record<string, Record<string, unknown>>;
+  playerHeight?: number | undefined;
 }
 
 export type Logger = Record<

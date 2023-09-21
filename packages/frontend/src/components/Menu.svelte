@@ -167,17 +167,21 @@
           <input
             id="player-height"
             type="number"
-            value={settings.playerHeight}
+            value={settings.playerHeight !== undefined
+              ? settings.playerHeight * 100
+              : undefined}
             on:change={(evt) => {
-              const value = +evt.currentTarget.value;
+              const value = +evt.currentTarget.value * 0.01;
               changeSetting("playerHeight", isNaN(value) ? undefined : value);
             }}
             placeholder="(auto-calculate)"
             aria-describedby="player-height-tip"
           />
           <span class="tip" id="player-height-tip">
-            Player height in centimeters. Leave empty to continuously calculate
-            based on median of the headset height over the past minute.
+            Height in centimeters to display the height marker. Note that this
+            should be the height of your <i>eyes</i> (not top of head) when looking
+            ahead. Leave empty to continuously calculate based on median of the headset
+            height over the past minute.
           </span>
         </div>
 

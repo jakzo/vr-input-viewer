@@ -13,18 +13,19 @@ const config = {
       iconFilenames[process.platform] ?? "icon.png",
     ),
     asar: { unpack: "*.{node,dll}" },
+    appVersion: "1.2.3",
     ...(process.env["APP_VERSION"]
       ? { appVersion: process.env["APP_VERSION"] }
       : {}),
   },
   rebuildConfig: {},
   makers: [
-    {
-      name: "@electron-forge/maker-squirrel",
-      config: {
-        name: "VrInputViewer",
-      },
-    },
+    // {
+    //   name: "@electron-forge/maker-squirrel",
+    //   config: {
+    //     name: "VrInputViewer",
+    //   },
+    // },
     {
       name: "@electron-forge/maker-zip",
       platforms: ["win32", "darwin"],

@@ -106,7 +106,11 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
       this.inputViewer.disconnectHeadset();
     }
     if (inputs.hmd?.pose)
-      this.setTransform(inputs.hmd.pose, this.inputViewer.transforms.hmd);
+      this.setTransform(
+        inputs.hmd.pose,
+        this.inputViewer.transforms.hmd,
+        -0.02,
+      );
 
     for (const handedness of ["left", "right"] as const) {
       const controller = inputs[handedness];
@@ -123,6 +127,7 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
         this.setTransform(
           controller.pose,
           this.inputViewer.transforms[handedness],
+          0.08,
         );
       if (controller?.state) {
         const gamepad = this.inputViewer.controllers[handedness]?.gamepad;
@@ -149,7 +154,11 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
     }
   }
 
-  setTransform(pose: OpenVR.TrackedDevicePose, transform: Transform) {
+  setTransform(
+    pose: OpenVR.TrackedDevicePose,
+    transform: Transform,
+    zOffset = 0,
+  ) {
     const m = pose.deviceToAbsoluteTracking;
     tempMatrix.set(
       m[0][0],
@@ -174,6 +183,10 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
       transform.rotation,
       new THREE.Vector3(),
     );
+    const offset = new THREE.Vector3(0, 0, zOffset).applyQuaternion(
+      transform.rotation.clone(),
+    );
+    transform.position.add(offset);
   }
 
   override onStop() {

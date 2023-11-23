@@ -1,4 +1,3 @@
-// @ts-expect-error - type-only import of ESM
 import type { VrFfiBridge } from "@jakzo/vr-input-viewer-desktop-frontend";
 import { OpenVR } from "@jakzo/vr-ffi";
 import { declareBridgeApi } from "./tipc/main";
@@ -11,6 +10,11 @@ export const vrFfiBridge = declareBridgeApi({
   },
   async openvrInit() {
     ivrSystem = OpenVR.Init(OpenVR.VRApplicationType.Background);
+  },
+  async openvrGetDeviceProp(deviceIndex, prop) {
+    if (!ivrSystem) throw new Error("openvrInit() must be called first");
+
+    return ivrSystem.GetStringTrackedDeviceProperty(deviceIndex, prop);
   },
   async openvrGetInputs() {
     if (!ivrSystem) throw new Error("openvrInit() must be called first");
@@ -35,11 +39,12 @@ export const vrFfiBridge = declareBridgeApi({
     return {
       hmd:
         indexHmd !== undefined
-          ? { pose: poses[indexHmd], state: undefined }
+          ? { index: indexHmd, pose: poses[indexHmd], state: undefined }
           : undefined,
       left:
         indexControllerLeft !== undefined
           ? {
+              index: indexControllerLeft,
               pose: poses[indexControllerLeft],
               state: ivrSystem.GetControllerState(indexControllerLeft),
             }
@@ -47,6 +52,7 @@ export const vrFfiBridge = declareBridgeApi({
       right:
         indexControllerRight !== undefined
           ? {
+              index: indexControllerRight,
               pose: poses[indexControllerRight],
               state: ivrSystem.GetControllerState(indexControllerRight),
             }

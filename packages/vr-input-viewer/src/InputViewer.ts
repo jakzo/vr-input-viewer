@@ -98,6 +98,7 @@ export class InputViewer {
 
   connectHeadset(profiles: string[] = []) {
     this.headsetProfiles = [...profiles, DEFAULT_HEADSET_PROFILE];
+    console.log("Headset connected", this.headsetProfiles);
   }
 
   disconnectHeadset() {
@@ -116,6 +117,7 @@ export class InputViewer {
         layout: this.opts.controllerLayout,
       });
     this.positionViewer?.onControllerConnected(xrInputSource);
+    console.log("Controller connected", xrInputSource.profiles);
   }
 
   disconnectController(handedness: Handedness) {

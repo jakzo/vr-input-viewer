@@ -96,12 +96,21 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
 
     const inputs = await window.vrFfiBridge.openvrGetInputs();
 
+    const { hmd } = inputs;
+    const isHeadsetConnected = !!hmd;
     const wasHeadsetConnected = !!this.inputViewer.headsetProfiles;
-    const isHeadsetConnected = !!inputs.hmd;
     if (!wasHeadsetConnected && isHeadsetConnected) {
-      // TODO: Use ivrSystem.GetStringTrackedDeviceProperty(Prop_ModelNumber)
-      // to get profiles
-      this.inputViewer.connectHeadset();
+      const [manufacturer, modelNumber] = await Promise.all([
+        window.vrFfiBridge.openvrGetDeviceProp(
+          hmd.index,
+          OpenVR.TrackedDeviceProperty_String.ManufacturerName,
+        ),
+        window.vrFfiBridge.openvrGetDeviceProp(
+          hmd.index,
+          OpenVR.TrackedDeviceProperty_String.ModelNumber,
+        ),
+      ]);
+      this.inputViewer.connectHeadset([`${manufacturer}-${modelNumber}`]);
     } else if (wasHeadsetConnected && !isHeadsetConnected) {
       this.inputViewer.disconnectHeadset();
     }
@@ -114,12 +123,22 @@ export class OpenvrInputSource extends VrInputSource<OpenvrInputSourceOpts> {
 
     for (const handedness of ["left", "right"] as const) {
       const controller = inputs[handedness];
-      const wasConnected = !!this.inputViewer.controllers[handedness];
       const isConnected = !!controller;
+      const wasConnected = !!this.inputViewer.controllers[handedness];
       if (!wasConnected && isConnected) {
-        // TODO: Use ivrSystem.GetStringTrackedDeviceProperty(Prop_ModelNumber)
-        // to get profiles
-        this.inputViewer.connectController(handedness);
+        const [manufacturer, modelNumber] = await Promise.all([
+          window.vrFfiBridge.openvrGetDeviceProp(
+            controller.index,
+            OpenVR.TrackedDeviceProperty_String.ManufacturerName,
+          ),
+          window.vrFfiBridge.openvrGetDeviceProp(
+            controller.index,
+            OpenVR.TrackedDeviceProperty_String.ModelNumber,
+          ),
+        ]);
+        this.inputViewer.connectController(handedness, [
+          `${manufacturer}-${modelNumber}`,
+        ]);
       } else if (wasConnected && !isConnected) {
         this.inputViewer.disconnectController(handedness);
       }

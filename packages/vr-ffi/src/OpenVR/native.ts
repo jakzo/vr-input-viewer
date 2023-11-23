@@ -30,7 +30,7 @@ declare class IVRSystem {
   /** Returns a string property. If the device index is not valid or the property is not a string type this function will
    * throw. */
   GetStringTrackedDeviceProperty(
-    deciveIndex: number,
+    deviceIndex: number,
     prop: TrackedDeviceProperty_String,
   ): string;
 

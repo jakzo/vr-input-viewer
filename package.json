@@ -12,6 +12,7 @@
   "scripts": {
     "format:check": "prettier --check",
     "format:fix": "prettier --write",
+    "typecheck": "tsc",
     "test": "npm run format:check"
   },
   "devDependencies": {

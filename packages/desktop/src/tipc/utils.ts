@@ -1,7 +1,4 @@
-export type BridgeApi = Record<
-  string,
-  (...args: unknown[]) => Promise<unknown>
->;
+export type BridgeApi = Record<string, (...args: any[]) => Promise<unknown>>;
 
 export const DEFAULT_CHANNEL = "tipc";
 

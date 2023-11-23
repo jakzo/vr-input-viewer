@@ -12,11 +12,9 @@ export const createHeadset = (headsetName: string, assetsBaseUrl?: string) => {
     loader.load(
       new URL(`headsets/${headsetName}.glb`, baseUrl).toString(),
       (gltf) => {
-        // TODO: Bake this into the model
+        // TODO: Bake these into the models
         gltf.scene.rotateY(Math.PI);
-        const mesh = gltf.scene.children[0] as THREE.Mesh;
-        const material = mesh.material as THREE.MeshStandardMaterial;
-        material.emissive = new THREE.Color(0.1, 0.1, 0.1);
+        makeMaterialsEmissive(gltf.scene);
         group.add(gltf.scene);
       },
       undefined,
@@ -33,4 +31,16 @@ export const createHeadset = (headsetName: string, assetsBaseUrl?: string) => {
   else loadFromCdn();
 
   return group;
+};
+
+const makeMaterialsEmissive = (parent: THREE.Object3D) => {
+  for (const child of parent.children) {
+    if (child instanceof THREE.Mesh) {
+      if (child.material instanceof THREE.MeshStandardMaterial) {
+        child.material.emissive = new THREE.Color(0.2, 0.2, 0.2);
+      }
+    }
+
+    makeMaterialsEmissive(child);
+  }
 };

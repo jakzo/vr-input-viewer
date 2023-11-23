@@ -10,6 +10,7 @@ import { VirtualXRInputSource, throttle } from "../utils/utils.js";
 import { Grid } from "./Grid.js";
 import { HeightTrackers } from "./HeightTrackers.js";
 import { Transforms, Handedness } from "../utils/types.js";
+import { DEFAULT_HEADSET_PROFILE } from "../InputViewer.js";
 
 export interface PositionViewerOpts {
   container: HTMLElement;
@@ -66,7 +67,7 @@ export class PositionViewer {
       right: this.createController(),
     };
 
-    this.headsetName = opts.headsetName ?? "oculus-quest2";
+    this.headsetName = opts.headsetName ?? DEFAULT_HEADSET_PROFILE;
     this.headset = createHeadset(this.headsetName, opts.assetsBaseUrl);
     this.scene.add(this.headset);
 

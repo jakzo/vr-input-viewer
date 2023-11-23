@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@jakzo/vr-input-viewer": "^0.0.0",
-    "@webxr-input-profiles/assets": "^1.0.13"
+    "@webxr-input-profiles/assets": "^1.0.14"
   },
   "devDependencies": {
     "@tsconfig/svelte": "^5.0.0",

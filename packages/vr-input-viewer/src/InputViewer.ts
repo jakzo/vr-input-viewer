@@ -3,9 +3,9 @@ import { PositionViewer } from "./PositionViewer/PositionViewer.js";
 import { Handedness, Transform, Transforms } from "./utils/types.js";
 import { VirtualXRInputSource } from "./utils/utils.js";
 
-const DEFAULT_HEADSET_PROFILE = "oculus-quest2";
+export const DEFAULT_HEADSET_PROFILE = "meta-quest3";
 // https://immersive-web.github.io/webxr-input-profiles/packages/viewer/dist/index.html
-const DEFAULT_CONTROLLER_PROFILE = "oculus-touch-v3";
+const DEFAULT_CONTROLLER_PROFILE = "meta-quest-touch-plus";
 
 export interface InputViewerOpts {
   /**

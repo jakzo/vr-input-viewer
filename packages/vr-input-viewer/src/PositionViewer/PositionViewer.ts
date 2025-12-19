@@ -46,7 +46,7 @@ export class PositionViewer {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    this.camera.position.set(0, 2, 2.2);
+    this.camera.position.set(0, 2.1, 2.1);
 
     this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);

@@ -1,5 +1,3 @@
-> **🚧 Still in BETA. Expect bugs. 🚧**
-
 Visualization of VR controller and headset inputs and positions. Useful for streams and recordings.
 
 Currently works with SteamVR.

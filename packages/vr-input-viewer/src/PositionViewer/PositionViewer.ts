@@ -16,6 +16,7 @@ export interface PositionViewerOpts {
   container: HTMLElement;
   transforms: Transforms;
   showStats?: boolean | undefined;
+  hideGrid?: boolean | undefined;
   assetsBaseUrl?: string | undefined;
   webxrInputProfilesBaseUrl?: string | undefined;
   headsetName?: string | undefined;
@@ -88,6 +89,7 @@ export class PositionViewer {
 
     this.scene.add(createEnvironment());
 
+    this.grid.plane.visible = !opts.hideGrid;
     this.scene.add(this.grid.plane);
 
     this.heightTrackers = new HeightTrackers(

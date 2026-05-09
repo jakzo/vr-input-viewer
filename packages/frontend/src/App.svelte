@@ -22,6 +22,7 @@
     hideHud: false,
     hidePositions: false,
     showStats: false,
+    hideGrid: false,
     playerHeight: undefined,
   };
   const loadSavedSettings = () => {

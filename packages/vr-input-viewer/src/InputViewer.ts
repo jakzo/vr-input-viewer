@@ -19,6 +19,8 @@ export interface InputViewerOpts {
   hidePositions?: boolean | undefined;
   /** Show rendering statistics for the position viewer like FPS. */
   showStats?: boolean | undefined;
+  /** Hide the grid lines in the 3D position view. */
+  hideGrid?: boolean | undefined;
   /**
    * URL where the `assets` directory within the vr-input-viewer package is
    * mounted. If not set, assets will be loaded from a CDN.

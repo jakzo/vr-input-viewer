@@ -211,6 +211,17 @@
           </span>
         </div>
 
+        <label for="hide-grid">Hide grid lines:</label>
+        <div>
+          <input
+            id="hide-grid"
+            type="checkbox"
+            checked={settings.hideGrid}
+            on:change={(evt) =>
+              changeSetting("hideGrid", evt.currentTarget.checked)}
+          />
+        </div>
+
         <label for="show-stats">Show render stats:</label>
         <div>
           <input
